@@ -196,9 +196,8 @@
                 return false;
             }
     
-        }
-    
-
+    }
+     
     function isAdmin(){
         if($_REQUEST['decode_authorization']){
             if($_REQUEST['decode_authorization']->role=='AD'){
@@ -214,7 +213,72 @@
             echo json_encode(array("error" => "yêu cầu đăng nhập"));
 
         }
+    }
+
+    function registerValidator(){
+        // Kiểm tra xem req body có gửi lên các trường name, email, password, confirm_password hay không
+        
+        $errors = [];
+
+        if (!isset($_POST['name']) || empty($_POST['name']) ||
+        !isset($_POST['email']) || empty($_POST['email']) ||
+        !isset($_POST['password']) || empty($_POST['password']) ||
+        !isset($_POST['confirm_password']) || empty($_POST['confirm_password'])
+        ) {
+            http_response_code(42);
+            echo json_encode(array("error:"=> "vui lòng điền đầy đủ thông tin: name, email, password, confirm_password")) ;
+            return false;
         }
+
+        // Kiểm tra định dạng email
+        $email = $_POST['email'];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Email không hợp lệ.";
+        }
+
+        // Kiểm tra độ dài mật khẩu
+        $password = $_POST['password'];
+        if (strlen($password) < 6) {
+            $errors[] = "Mật khẩu phải chứa ít nhất 6 kí tự.";
+        }
+
+        // Kiểm tra khớp mật khẩu và xác nhận mật khẩu
+        $confirmPassword = $_POST['confirm_password'];
+        if ($password !== $confirmPassword) {
+            $errors[] = "Mật khẩu không khớp.";
+        }
+
+        if (!empty($errors)) {
+            // lỗi validate 
+            http_response_code(422);
+            echo json_encode(array("error:"=> $errors)) ;
+            return false;
+        }else{
+            //kiểm tra người dùng đã tồn tại trong db chưa
+            $db = new Database();
+            $conn = $db -> connect();
+            
+            $query = "SELECT * FROM users WHERE email = :email";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':email',$email);
+            $stmt->execute();
+            $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
+            $conn = null;
+            if($isExist){
+                http_response_code(409);
+                echo json_encode(array("error:"=> "Email đã tồn tại")) ;
+                return false;
+            }
+            return true;
+
+        }
+
+
+
+    }
+
+
+
 
 
 ?>

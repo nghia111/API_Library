@@ -6,7 +6,7 @@ class User{
     public $name	;
     public $email	;
     private $password;	
-    public $role;
+    public $role ;
 
     //connect db 
     public function   __construct($db){    
@@ -15,7 +15,9 @@ class User{
 
 
 
-  
+    public function setPassword($password) {
+        $this->password = $password;
+    }
 
 
 
@@ -88,6 +90,21 @@ class User{
         return array("message"=>"đăng xuất thành công!");
     }
     
+    public function register(){
+
+
+
+        $query = "INSERT INTO users (name,email,password,role) values (:name,:email,:password,:role)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':password', $this->password);
+        $stmt->bindParam(':role', "UR");
+        $stmt->execute();
+
+        $this->conn = null;
+        return array("message"=>"đăng ký thành công.");
+    }
 }
 
 

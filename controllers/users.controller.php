@@ -64,6 +64,22 @@
         echo json_encode($result);
     }
 
+    function registerController(){
+        $db = new Database();
+
+        $connect = $db->connect();
+        $user = new User( $connect);
+        if(isset($_POST['name'])){ $user->name= $_POST['name'];} 
+        if(isset($_POST['email'])){ $user->email= $_POST['email'];} 
+        if(isset($_POST['password'])){
+            $password = hash_password($_POST['password']);
+            $user->setPassword($password);
+        } 
+        $result = $user->register();
+    
+
+        echo json_encode($result);
+    }
 
 
 
