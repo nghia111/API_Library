@@ -284,10 +284,10 @@
         $errors=[];
 
         if (!isset($_POST['name']) || empty($_POST['name'])) {
-            $errors[] = "yêu cầu truyền lên req body name";
+            $errors[] = "yêu cầu truyền name lên req body ";
         }
         if(!isset($_GET['id'])|| empty($_GET['id'])   ){
-            $errors[] = "yêu cầu truyền lên req query id";
+            $errors[] = "yêu cầu truyền id lên req query ";
         }
         if (!empty($errors)) {
             http_response_code(422);
@@ -299,6 +299,14 @@
 
     }
 
+    function deleteUserValidator(){
+        if(!isset($_GET['id'])|| empty($_GET['id'])   ){
+            http_response_code(422);
+            echo json_encode(array("error:"=> "yêu cầu truyền id lên req query ")) ;
+            return false;
+        }
+        return true;
+    }
 
 
 

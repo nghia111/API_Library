@@ -94,6 +94,16 @@
         echo json_encode($result);
     }
 
+    function deleteUserController(){
+        $db = new Database();
+
+        $connect = $db->connect();
+        $user = new User( $connect);
+        $id = $_GET['id'];
+        $user->id = $id;
+        $result = $user->deleteUser();
+        echo json_encode($result);
+    }
 
 
 

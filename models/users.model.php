@@ -121,10 +121,30 @@ class User{
             return array("message"=>"cập nhật thành công.","name"=>$this->name);
         }else{
             http_response_code(401);
-            return array("errors"=>"công nhật thất bại, user not found");
+            return array("errors"=>"cập nhật thất bại, user not found");
 
         }
     }
+
+    public function deleteUser(){
+        $this->role = "UR";
+        $query = "DELETE FROM users  WHERE  id= :id AND role = :role ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':role', $this->role);
+        $result = $stmt->execute();
+        // lấy số row được cập nhật
+        $affectedRows = $stmt->rowCount();
+        $this->conn = null;
+        if($affectedRows >0){
+            return array("message"=>"xóa user thành công.");
+        }else{
+            http_response_code(401);
+            return array("errors"=>"xóa thất bại, user not found");
+
+        }
+    }
+
 
 
 
