@@ -81,6 +81,18 @@
         echo json_encode($result);
     }
 
+    function updateUserController(){
+        $db = new Database();
+
+        $connect = $db->connect();
+        $user = new User( $connect);
+        $id = $_GET['id'];
+        $name = $_POST['name'];
+        $user->id = $id;
+        $user->name = $name;
+        $result = $user->updateName();
+        echo json_encode($result);
+    }
 
 
 

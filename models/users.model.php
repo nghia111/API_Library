@@ -93,23 +93,41 @@ class User{
     public function register(){
 
 
-
+        $this->role = "UR";
         $query = "INSERT INTO users (name,email,password,role) values (:name,:email,:password,:role)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':password', $this->password);
-        $stmt->bindParam(':role', "UR");
+        $stmt->bindParam(':role', $this->role );
         $stmt->execute();
 
         $this->conn = null;
         return array("message"=>"đăng ký thành công.");
     }
+
+    public function updateName(){
+        $this->role = "UR";
+        $query = "UPDATE users SET name= :name where id= :id AND role = :role ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':role', $this->role);
+        $result = $stmt->execute();
+        // lấy số row được cập nhật
+        $affectedRows = $stmt->rowCount();
+        $this->conn = null;
+        if($affectedRows >0){
+            return array("message"=>"cập nhật thành công.","name"=>$this->name);
+        }else{
+            http_response_code(401);
+            return array("errors"=>"công nhật thất bại, user not found");
+
+        }
+    }
+
+
+
+
 }
-
-
-
-
-
-
 ?>

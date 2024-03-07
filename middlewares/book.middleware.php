@@ -1,4 +1,7 @@
 <?php
+    header('Access-Control-Allow-Origin:*');
+    header('Content-Type: application/json');
+
     function getBooksValidator() {
         $errors = [];
         if(isset($_GET['limit'])){

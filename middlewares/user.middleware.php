@@ -1,4 +1,7 @@
 <?php
+    header('Access-Control-Allow-Origin:*');
+    header('Content-Type: application/json');
+
     require "../../utils/crypto.php";
     require "../../utils/jwt.php";
 
@@ -225,7 +228,7 @@
         !isset($_POST['password']) || empty($_POST['password']) ||
         !isset($_POST['confirm_password']) || empty($_POST['confirm_password'])
         ) {
-            http_response_code(42);
+            http_response_code(422);
             echo json_encode(array("error:"=> "vui lòng điền đầy đủ thông tin: name, email, password, confirm_password")) ;
             return false;
         }
@@ -277,6 +280,24 @@
 
     }
 
+    function updateUserValidator(){
+        $errors=[];
+
+        if (!isset($_POST['name']) || empty($_POST['name'])) {
+            $errors[] = "yêu cầu truyền lên req body name";
+        }
+        if(!isset($_GET['id'])|| empty($_GET['id'])   ){
+            $errors[] = "yêu cầu truyền lên req query id";
+        }
+        if (!empty($errors)) {
+            http_response_code(422);
+            echo json_encode(array("error:"=> $errors)) ;
+            return false;
+        }
+        return true;
+
+
+    }
 
 
 
