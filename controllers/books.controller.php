@@ -6,7 +6,7 @@
     require "../../models/books.model.php";
 
 
-        function getBooksController(){
+    function getBooksController(){
             $db = new Database();
     
             $connect = $db->connect();
@@ -43,7 +43,36 @@
             else{
                 echo json_encode(array('message:'=>"không tìm thấy sách"));    
             }
+    }
+    
+    function getAllCategories(){
+        $db = new Database();
+    
+        $connect = $db->connect();
+
+        $query = "SELECT * FROM categories";
+        $stmt = $connect->prepare($query);
+        $stmt->execute();
+        $result= $stmt;
+        $connect = null;
+        $num = $result->rowCount();
+        if($num>0){
+            $results_array= [];
+            while($row= $result->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+                $item = array(
+                    'code'=> $code,
+                    'value'=>$value
+                );
+                array_push($results_array,$item);
+            }
+            echo json_encode(array("message"=>"Successfully",'categories'=>$results_array));
         }
+        else{
+            echo json_encode(array('message:'=>"không tìm thấy categories"));    
+        }
+
+    }
     
 
 
