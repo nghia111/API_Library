@@ -1,4 +1,7 @@
 <?php
+    require "../../utils/crypto.php";
+    require "../../utils/jwt.php";
+
     function getUsersValidator() {
             $errors = [];
             
@@ -78,7 +81,7 @@
                     $stmt->execute();
                     $user = $stmt->fetch(PDO::FETCH_ASSOC);
            
-                    if($user && $_POST['password'] == $user['password']){
+                    if($user && compare_password( $_POST['password'],$user['password'])){
                         //xác thực thành công
 
                         $query = "SELECT * FROM refresh_tokens WHERE  user_id = :user_id";
@@ -135,11 +138,66 @@
             $_REQUEST['decode_authorization'] = $decodeAuthorization;
             return true;
         }catch(Exception $e){
-            echo json_encode("token hết hạn hoặc không hợp lệ: " . $e->getMessage());
+            echo json_encode(array("error"=>"token hết hạn hoặc không hợp lệ: " . $e->getMessage()));
             return false;
         }
 
     }
+
+    function refreshTokenValidator(){
+
+        try{
+            // Kiểm tra xem Refresh Token có được gửi lên hay không
+            if (!isset($_POST['refresh_token'])) {
+                http_response_code(401);
+                echo json_encode(array("error" => "yêu cầu có refresh_token để xác thực"));
+                return false;
+            }
+               // Lấy giá trị của Refresh Token từ body
+               $refreshToken = $_POST['refresh_token'];
+               // Kiểm tra xem Access Token có đúng định dạng hay không
+               if (!preg_match('/Bearer\s(\S+)/', $refreshToken, $matches)) {
+                   http_response_code(401);
+                   echo json_encode(array("error" => "refresh_token chưa đúng định dạng"));
+                   return false;
+               }
+               // Lấy giá trị thực tế của refresh Token
+                $refresh_token = $matches[1];
+
+               //kiểm tra có trong db không
+                $db = new Database();
+                $conn = $db -> connect();
+        
+                $query = "SELECT * FROM refresh_tokens WHERE value = :value AND user_id = :user_id";
+                $stmt = $conn->prepare($query);
+                $stmt->bindParam(':value',$refresh_token);
+                $stmt->bindParam(':user_id',$_REQUEST['decode_authorization']->id);
+                $stmt->execute();
+                $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
+                if(!$isExist){
+                    http_response_code(401);
+                    echo json_encode(array("error" => "refresh_token này không tồn tại trong db (bạn chưa đăng nhập)"));
+                    $conn = null;
+                    return false;
+                }
+
+
+
+
+                $decode_refreshToken = verifyToken($refresh_token,"CAiNaYLARefResHTOkenKeY12344321242123");
+                $_REQUEST['decode_refreshToken'] = $decode_refreshToken;
+      
+
+                $conn = null;
+                return true;
+            }catch(Exception $e){
+                echo json_encode(array("error"=>"token hết hạn hoặc không hợp lệ: " . $e->getMessage()));
+                $conn = null;
+                return false;
+            }
+    
+        }
+    
 
     function isAdmin(){
         if($_REQUEST['decode_authorization']){

@@ -1,5 +1,4 @@
 <?php
-require "../../utils/jwt.php";
 class User{
     private $conn;
     
@@ -74,6 +73,21 @@ class User{
         $this->conn = null;
         return [$accessToken,$refreshToken];
     }
+
+        
+    public function logout(){
+
+        $refresh_token = preg_split("/\s+/", $_POST['refresh_token'])[1];
+
+        $query = "DELETE FROM refresh_tokens WHERE value= :value;";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':value', $refresh_token);
+        $stmt->execute();
+
+        $this->conn = null;
+        return array("message"=>"đăng xuất thành công!");
+    }
+    
 }
 
 

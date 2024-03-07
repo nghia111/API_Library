@@ -52,7 +52,17 @@
       
     }
 
+    function logoutController(){
+        $db = new Database();
 
+        $connect = $db->connect();
+        $user = new User( $connect);
+        
+        $result = $user->logout();
+    
+
+        echo json_encode($result);
+    }
 
 
 

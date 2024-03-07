@@ -19,9 +19,5 @@ function route_login() {
         echo json_encode(array("message" => "Method Not Allowed"));
     }
     }
-    route_login()
-
-
-
-
+    route_login();
 ?>
