@@ -91,5 +91,14 @@
         echo json_encode($result);
     }
 
+    function deleteBookController(){
+        $db = new Database();
 
+        $connect = $db->connect();
+        $book = new Book( $connect);
+        $id = $_GET['id'];
+        $book->id = $id;
+        $result = $book->deleteBook();
+        echo json_encode($result);
+    }
 ?>

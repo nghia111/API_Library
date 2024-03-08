@@ -4,7 +4,7 @@
     require "../../middlewares/user.middleware.php";
     require "../../controllers/users.controller.php";
 
-    function route_get_users() {
+    function route_delete_users() {
         // Kiểm tra phương thức request là GET
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // lấy data từ req.query
@@ -24,5 +24,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        route_get_users()
+        route_delete_users()
 ?>

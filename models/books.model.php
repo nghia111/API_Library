@@ -75,6 +75,25 @@
             $this->conn = null;
             return array("message"=>"tạo sách thành công thành công.");
         }
+
+        public function deleteBook(){
+            $query = "DELETE FROM books  WHERE  id= :id  ";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $this->id);
+            $stmt->execute();
+            // lấy số row được cập nhật
+            $affectedRows = $stmt->rowCount();
+            $this->conn = null;
+            if($affectedRows >0){
+                return array("message"=>"xóa sách thành công.");
+            }else{
+                http_response_code(401);
+                return array("errors"=>"xóa sách thất bại, book not found");
+    
+            }
+        }
+        
+
     }
 
 

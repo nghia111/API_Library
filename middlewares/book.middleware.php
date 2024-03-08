@@ -188,4 +188,14 @@
 
     }
 
+    function deleteBookValidator(){
+        if(!isset($_GET['id'])|| empty($_GET['id'])   ){
+            http_response_code(422);
+            echo json_encode(array("error:"=> "yêu cầu truyền id lên req query ")) ;
+            return false;
+        }
+        return true;
+    
+
+    }
 ?>
