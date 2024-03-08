@@ -122,7 +122,7 @@ class User{
         if($affectedRows >0){
             return array("message"=>"cập nhật thành công.","name"=>$this->name);
         }else{
-            http_response_code(401);
+            http_response_code(404);
             return array("errors"=>"cập nhật thất bại, user not found");
 
         }
@@ -141,7 +141,7 @@ class User{
         if($affectedRows >0){
             return array("message"=>"xóa user thành công.");
         }else{
-            http_response_code(401);
+            http_response_code(404);
             return array("errors"=>"xóa thất bại, user not found");
 
         }

@@ -19,30 +19,8 @@
             if(isset($_GET['author'])){ $book->author= $_GET['author'];} 
             
             $result = $book->getBooks();
-            $num = $result->rowCount();
-        
-            if($num>0){
-                $results_array= [];
-                while($row= $result->fetch(PDO::FETCH_ASSOC)){
-                    extract($row);
-                    $item = array(
-                        'id'=> $id,
-                        'title'=>$title,
-                        'available'=>$available,
-                        'image'=>$image,
-                        'description'=>$description,
-                        'category_code'=>$category_code,
-                        'author'=>$author,
-                        'category_code' => $category_code,
-                        'category_value' =>$category_value
-                    );
-                    array_push($results_array,$item);
-                }
-                echo json_encode(array("message"=>"Successfully",'data'=>$results_array));
-            }
-            else{
-                echo json_encode(array('message:'=>"không tìm thấy sách"));    
-            }
+            echo json_encode($result);
+   
     }
     
     function getAllCategoriesController(){

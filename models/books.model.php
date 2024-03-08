@@ -56,7 +56,58 @@
                 $stmt->bindParam($i + 1, $query_params[$i]);
             }
             $stmt->execute();
-            $this->conn = null;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            $num = $stmt->rowCount();
+            $query2 =  "SELECT COUNT(*) as total_rows FROM BOOKS";
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->execute();
+            $total_rows_result = $stmt2->fetch(PDO::FETCH_ASSOC);
+            $total_rows = $total_rows_result['total_rows'];
+            $total_pages = ceil($total_rows / $_GET['limit']);
+            $this-> conn = null;
+            if($num>0){
+                $results_array= [];
+                while($row= $stmt->fetch(PDO::FETCH_ASSOC)){
+                    extract($row);
+                    $item = array(
+                        'id'=> $id,
+                        'title'=>$title,
+                        'available'=>$available,
+                        'image'=>$image,
+                        'description'=>$description,
+                        'category_code'=>$category_code,
+                        'author'=>$author,
+                        'category_code' => $category_code,
+                        'category_value' =>$category_value,
+                    );
+                    array_push($results_array,$item);
+                }
+                return (array("message"=>"Successfully",'data'=>$results_array, 'total_page' => $total_pages));
+            }
+            else{
+                http_response_code(404);
+               return (array('message:'=>"không tìm thấy sách"));    
+            }
+
+
+
+
+
+
+
             return $stmt;
         }
         
@@ -87,7 +138,7 @@
             if($affectedRows >0){
                 return array("message"=>"xóa sách thành công.");
             }else{
-                http_response_code(401);
+                http_response_code(404);
                 return array("errors"=>"xóa sách thất bại, book not found");
     
             }
@@ -139,7 +190,7 @@
             if($affectedRows >0){
                 return array("message"=>"cập nhật sách thành công");
             }else{
-                http_response_code(401);
+                http_response_code(404);
                 return array("errors"=>"cập nhật sách thất bại, book not found");
     
             }
