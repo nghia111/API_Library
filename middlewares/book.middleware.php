@@ -198,4 +198,140 @@
     
 
     }
+    
+    function updateBookValidator(){
+        $id = $_GET['id'] ?? '';
+        if(empty($id) || !isset($_GET['id']) ){
+            http_response_code(422);
+            echo json_encode(array("error:"=> "yêu cần truyền book id lên query ")) ;
+            return false;
+
+        }
+
+
+
+        $title = $_POST['title'] ?? '';
+        $available = $_POST['available'] ?? '';
+        $image = $_POST['image'] ?? '';
+        $description = $_POST['description'] ?? '';
+        $category_code = $_POST['category_code'] ?? '';
+        $author = $_POST['author'] ?? '';
+        if (!empty($title) || !empty($available) || !empty($image) || !empty($description) || !empty($category_code) || !empty($author)) {
+            $errors = [];
+            // Kiểm tra dữ liệu cho biến title
+            if (!empty($title)) {
+                if(!is_string($title)){
+                    $errors[] = "title phải là string";
+                }
+            }
+
+            // Kiểm tra dữ liệu cho biến available
+            if (!empty($available)) {
+                if(!is_numeric($available)){
+                    $errors[]="available phải là number";
+                    if($available<0){
+                        $errors[]="available phải >= 0";
+                    }
+                }
+            }
+
+            // Kiểm tra dữ liệu cho biến image
+            if (!empty($image)) {
+                if(!is_string($image)){
+                    $errors[] = "image phải là string";
+                }
+            }
+            
+
+            // Kiểm tra dữ liệu cho biến description
+            if (!empty($description)) {
+                if(!is_string($description)){
+                    $errors[] = "description phải là string";
+                }
+            }
+
+            // Kiểm tra dữ liệu cho biến category_code
+            if (!empty($category_code)) {
+                if(!is_string($category_code)){
+                    $errors[] = "category_code phải là string";
+                }else{
+                    $valid_categories = array(
+                        "ACC8",
+                        "AND13",
+                        "ATD13",
+                        "ATR3",
+                        "AYU13",
+                        "BSU8",
+                        "BYI9",
+                        "CER5",
+                        "CLU8",
+                        "CNH17",
+                        "CNH9",
+                        "CSH9",
+                        "CSL8",
+                        "CYO12",
+                        "DTE7",
+                        "EAR7",
+                        "FKO14",
+                        "FNI7",
+                        "FYA7",
+                        "HHE6",
+                        "HLI10",
+                        "HNI18",
+                        "HRO6",
+                        "HRU5",
+                        "HYI7",
+                        "MCU5",
+                        "MYY7",
+                        "NNO10",
+                        "NSO6",
+                        "NTE9",
+                        "PGA9",
+                        "PLA10",
+                        "PSO8",
+                        "PYH10",
+                        "PYO6",
+                        "PYS10",
+                        "REO7",
+                        "RNE8",
+                        "SEC7",
+                        "SEU8",
+                        "SNC15",
+                        "SPE9",
+                        "SSH13",
+                        "SSP16",
+                        "STE14",
+                        "SYP12",
+                        "TLR6",
+                        "TRH8",
+                        "WNO14",
+                        "YTO11"
+                    );
+                    if(!in_array($category_code,$valid_categories)){
+                        $errors[]= "category_code không hợp lệ";
+                    }
+                }
+            }
+
+            // Kiểm tra dữ liệu cho biến author
+            if (!empty($author)) {
+                if(!is_string($author)){
+                    $errors[] = "author phải là string";
+                }
+            }
+            if (!empty($errors)) {
+                http_response_code(422);
+                echo json_encode(array("error:"=> $errors)) ;
+            
+            return false;
+            }
+        return true;
+        }else{
+            http_response_code(422);
+            echo json_encode(array("error:"=> "bạn cần phải truyền data update lên body ")) ;
+            return false;
+
+        }
+
+    }
 ?>
