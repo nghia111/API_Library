@@ -1,15 +1,18 @@
 <?php
-
+// api của admin
     require "../../middlewares/book.middleware.php";
     require "../../controllers/books.controller.php";
 
-    function route_all_categories() {
+    function route_create_book() {
         // Kiểm tra phương thức request là GET
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // lấy data từ req.query
      
-        // gọi controller
-        getAllCategoriesController();
+        // thực hiện validate() 
+        if( createBookValidator()){
+            // gọi controller
+            createBookController();
+         }
             
         
     } else {
@@ -18,5 +21,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        route_all_categories()
+        route_create_book()
 ?>

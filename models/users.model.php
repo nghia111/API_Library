@@ -108,12 +108,12 @@ class User{
 
     public function updateName(){
         $this->role = "UR";
-        $query = "UPDATE users SET name= :name where id= :id AND role = :role ";
+        $query = "UPDATE users SET name= :name, updatedAt = CURRENT_TIMESTAMP()  where id= :id AND role = :role ";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':role', $this->role);
-        $result = $stmt->execute();
+        $stmt->execute();
         // lấy số row được cập nhật
         $affectedRows = $stmt->rowCount();
         $this->conn = null;
@@ -132,7 +132,7 @@ class User{
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':role', $this->role);
-        $result = $stmt->execute();
+        $stmt->execute();
         // lấy số row được cập nhật
         $affectedRows = $stmt->rowCount();
         $this->conn = null;
@@ -144,10 +144,5 @@ class User{
 
         }
     }
-
-
-
-
-
 }
 ?>

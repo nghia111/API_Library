@@ -3,7 +3,7 @@
 require "../../middlewares/user.middleware.php";
 require "../../controllers/users.controller.php";
 
-function route_login() {
+function route_register() {
     // Kiểm tra phương thức request là POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // thực hiện validate() 
@@ -19,5 +19,5 @@ function route_login() {
         echo json_encode(array("message" => "Method Not Allowed"));
     }
     }
-    route_login();
+    route_register();
 ?>

@@ -45,7 +45,7 @@
             }
     }
     
-    function getAllCategories(){
+    function getAllCategoriesController(){
         $db = new Database();
     
         $connect = $db->connect();
@@ -74,6 +74,22 @@
 
     }
     
+    function createBookController(){
+        $db = new Database();
+
+        $connect = $db->connect();
+        $book = new Book( $connect);
+        if(isset($_POST['title'])){ $book->title= $_POST['title'];} 
+        if(isset($_POST['available'])){ $book->available= $_POST['available'];} 
+        if(isset($_POST['description'])){ $book->description= $_POST['description'];} 
+        if(isset($_POST['author'])){ $book->author= $_POST['author'];} 
+        if(isset($_POST['image'])){ $book->image= $_POST['image'];} 
+        if(isset($_POST['category_code'])){ $book->category_code= $_POST['category_code'];}
+        $result = $book->createBook();
+    
+
+        echo json_encode($result);
+    }
 
 
 ?>

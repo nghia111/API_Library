@@ -5,7 +5,7 @@
         public $id;	
         public $title	;
         public $available	;
-        private $image;	
+        public $image;	
         public $description;
         public $category_code;
         public $author;
@@ -32,8 +32,10 @@
                 array_push($query_params,$this->available);
             }
             if($this->description){
-                $query = $query."AND description = ?";
-                array_push($query_params,$this->description);
+                $query = $query."AND description LIKE ?";
+                $descriptionValue = '%'.$this->description.'%';
+                array_push($query_params,$descriptionValue);
+
             }
             if($this->category_code){
                 $query = $query."AND category_code = ?";
@@ -58,6 +60,21 @@
             return $stmt;
         }
         
+        public function createBook(){
+            $query = "INSERT INTO books (title,available,description,image,category_code,author) values (:title,:available,:description,:image,:category_code,:author)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':title', $this->title);
+            $stmt->bindParam(':available', $this->available);
+            $stmt->bindParam(':description', $this->description);
+            $stmt->bindParam(':image', $this->image );
+            $stmt->bindParam(':category_code', $this->category_code );
+            $stmt->bindParam(':author', $this->author );
+
+            $stmt->execute();
+    
+            $this->conn = null;
+            return array("message"=>"tạo sách thành công thành công.");
+        }
     }
 
 

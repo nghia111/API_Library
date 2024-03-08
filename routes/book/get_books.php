@@ -3,7 +3,7 @@
     require "../../middlewares/book.middleware.php";
     require "../../controllers/books.controller.php";
 
-    function route_get_user() {
+    function route_get_books() {
         // Kiểm tra phương thức request là GET
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // lấy data từ req.query
@@ -21,5 +21,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        route_get_user()
+        route_get_books()
 ?>

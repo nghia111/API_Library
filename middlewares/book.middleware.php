@@ -27,8 +27,11 @@
         }
         
         // Kiểm tra $available
-        if (isset($_GET['available']) && !is_numeric($_GET['available'])) {
-            $errors[] = "available phải là một số.";
+        if (isset($_GET['available']) && !is_numeric($_GET['available']) ) {
+            $errors[] = "available phải là một số";
+            if($_GET['available']<0){
+                $errors[]= "available phải >= 0";
+            }
         }
     
         // Kiểm tra $description
@@ -67,5 +70,122 @@
         }
         return true;
 }
+
+    function createBookValidator() {
+        $errors = [];
+        if (!isset($_POST['title']) || empty($_POST['title']) ||
+        !isset($_POST['available']) || empty($_POST['available']) ||
+        !isset($_POST['description']) || empty($_POST['description']) ||
+        !isset($_POST['category_code']) || empty($_POST['category_code'])||
+        !isset($_POST['author']) || empty($_POST['author'])||
+        !isset($_POST['image']) 
+        ) {
+            http_response_code(422);
+            echo json_encode(array("error:"=> "vui lòng điền đầy đủ thông tin: title, available, description, category_code, author, image")) ;
+            return false;
+        }
+
+        // Kiểm tra title
+        if (!is_string($_POST['title'])) {
+            $errors[] = "title phải là string.";
+        }
+
+        // Kiểm tra description
+        if (!is_string($_POST['description'])) {
+            $errors[] = "description phải là string.";
+        }
+
+        // Kiểm tra category_code
+        if (!is_string($_POST['category_code'])) {
+            $errors[] = "category_code phải là string.";
+        }else{
+            $valid_categories = array(
+                "ACC8",
+                "AND13",
+                "ATD13",
+                "ATR3",
+                "AYU13",
+                "BSU8",
+                "BYI9",
+                "CER5",
+                "CLU8",
+                "CNH17",
+                "CNH9",
+                "CSH9",
+                "CSL8",
+                "CYO12",
+                "DTE7",
+                "EAR7",
+                "FKO14",
+                "FNI7",
+                "FYA7",
+                "HHE6",
+                "HLI10",
+                "HNI18",
+                "HRO6",
+                "HRU5",
+                "HYI7",
+                "MCU5",
+                "MYY7",
+                "NNO10",
+                "NSO6",
+                "NTE9",
+                "PGA9",
+                "PLA10",
+                "PSO8",
+                "PYH10",
+                "PYO6",
+                "PYS10",
+                "REO7",
+                "RNE8",
+                "SEC7",
+                "SEU8",
+                "SNC15",
+                "SPE9",
+                "SSH13",
+                "SSP16",
+                "STE14",
+                "SYP12",
+                "TLR6",
+                "TRH8",
+                "WNO14",
+                "YTO11"
+            );
+            if(!in_array($_POST['category_code'],$valid_categories)){
+                $errors[]= "category_code không hợp lệ";
+            }
+        }
+        // Kiểm tra author
+        if (!is_string($_POST['author'])) {
+            $errors[] = "author phải là string.";
+        }
+        // Kiểm tra image
+        if (!empty($_POST['image'])) {
+            if (!is_string($_POST['image'])) {
+                $errors[] = "image phải là string.";
+            }
+            }
+        
+        // Kiểm tra available
+        if (!is_numeric($_POST['available'])) {
+            $errors[] = "available phải là number";
+        }else{
+            if($_POST['available'] <0){
+                $errors[]= "available phải >= 0";
+            }
+        }
+        if (!empty($errors)) {
+            // lỗi validate 
+            http_response_code(422);
+            echo json_encode(array("error:"=> $errors)) ;
+            return false;
+        }
+        return true;
+
+
+
+
+
+    }
 
 ?>
