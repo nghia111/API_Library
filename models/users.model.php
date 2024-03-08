@@ -60,11 +60,13 @@ class User{
                          'name'=>$_REQUEST['user']['name'],
                          'role'=>$_REQUEST['user']['role']);
         $accessTokenKey = "dayLaKEyAcCes5ToKEn123456123123";
-        $accessToken = signToken($payload,$accessTokenKey,'5 day');
+        $expirationAccessTokenTime =strtotime("+5 day");
+        $accessToken = signToken($payload,$accessTokenKey,$expirationAccessTokenTime);
         
 
         $refreshTokenKey ="CAiNaYLARefResHTOkenKeY12344321242123";
-        $refreshToken = signToken($payload,$refreshTokenKey,'100 day');
+        $expirationRefreshTokenTime =strtotime("+100 day");
+        $refreshToken = signToken($payload,$refreshTokenKey,$expirationRefreshTokenTime);
 
         $query = "INSERT INTO refresh_tokens (user_id, value) VALUES (:user_id, :value)";
         $stmt = $this->conn->prepare($query);
@@ -143,6 +145,29 @@ class User{
             return array("errors"=>"xóa thất bại, user not found");
 
         }
+    }
+    
+    public function refreshToken(){
+        $payload = array('id'=> $_REQUEST['decode_refreshToken']->id,
+        'name'=>$_REQUEST['decode_refreshToken']->name,
+        'role'=>$_REQUEST['decode_refreshToken']->role);
+        $accessTokenKey = "dayLaKEyAcCes5ToKEn123456123123";
+        $expirationAccessTokenTime =strtotime("+5 day");
+        $accessToken = signToken($payload,$accessTokenKey,$expirationAccessTokenTime);
+
+
+        $refreshTokenKey ="CAiNaYLARefResHTOkenKeY12344321242123";
+        $expirationRefreshTokenTime = $_REQUEST['decode_refreshToken']->exp;
+        $refreshToken = signToken($payload,$refreshTokenKey,$expirationRefreshTokenTime);
+
+        $query = "UPDATE refresh_tokens set value=:value, updatedAt=CURRENT_TIMESTAMP() where user_id=:user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id',$_REQUEST['decode_refreshToken']->id );
+        $stmt->bindParam(':value', $refreshToken);
+        $stmt->execute();
+
+        $this->conn = null;
+        return [$accessToken,$refreshToken];
     }
 }
 ?>

@@ -1,4 +1,6 @@
 <?php
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 require "../../middlewares/user.middleware.php";
 require "../../controllers/users.controller.php";
@@ -7,10 +9,10 @@ function route_register() {
     // Kiểm tra phương thức request là POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // thực hiện validate() 
-        if(registerValidator()){
+        // if(registerValidator()){
             // gọi controller
             registerController();
-        }
+        // }
     
         
 } else {

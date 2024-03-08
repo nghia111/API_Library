@@ -6,19 +6,15 @@
     require "../../middlewares/user.middleware.php";
     require "../../controllers/users.controller.php";
 
-    function route_delete_users() {
+    function route_update_users() {
         // Kiểm tra phương thức request là GET
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // lấy data từ req.query
      
         // thực hiện validate() 
-        if(accessTokenValidator()){  
-            if(isAdmin()){
-                if( deleteUserValidator()){
-                    // gọi controller
-                    deleteUserController();
-                }
-            }
+        if(refreshTokenValidator()){  
+            // gọi controller
+             refreshTokenController();
         }
     } else {
             // Trả về lỗi không hỗ trợ phương thức
@@ -26,5 +22,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        route_delete_users()
+        route_update_users()
 ?>

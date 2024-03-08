@@ -171,10 +171,9 @@
                 $db = new Database();
                 $conn = $db -> connect();
         
-                $query = "SELECT * FROM refresh_tokens WHERE value = :value AND user_id = :user_id";
+                $query = "SELECT * FROM refresh_tokens WHERE value = :value";
                 $stmt = $conn->prepare($query);
                 $stmt->bindParam(':value',$refresh_token);
-                $stmt->bindParam(':user_id',$_REQUEST['decode_authorization']->id);
                 $stmt->execute();
                 $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
                 if(!$isExist){

@@ -1,6 +1,8 @@
 <?php
     //api của admin
-
+    header('Access-Control-Allow-Methods: POST');
+    header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
+    
     require "../../middlewares/user.middleware.php";
     require "../../controllers/users.controller.php";
 

@@ -10,7 +10,7 @@ function signToken($payload, $key, $expirationTime)
     try {
         $currentTimestamp = time();
         $algorithm = 'HS256';
-        $payload['exp'] = strtotime("+". $expirationTime);
+        $payload['exp'] = $expirationTime;
         $payload['iat']=  $currentTimestamp;
         $token = JWT::encode($payload, $key, $algorithm);
         return $token;
