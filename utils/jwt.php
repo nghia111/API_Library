@@ -28,8 +28,8 @@ function verifyToken($token, $key )
         $decoded = JWT::decode($token, new Key($key, $algorithms));
         return $decoded;
     } catch (Firebase\JWT\ExpiredException $e) {
-        // Xử lý lỗi tại đây (ví dụ: ghi log, thông báo lỗi, ...)
-        echo 'Có lỗi xác thực token: ' . $e->getMessage();
+        // Xử lý lỗi tại đây 
+        echo json_encode(array('errors'=>'Có lỗi xác thực token (token hết hạn): ' . $e->getMessage()));
         return null;
     }
 }

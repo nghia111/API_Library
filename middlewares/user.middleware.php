@@ -36,13 +36,6 @@
                     $errors[] = "Email không hợp lệ.";
                 }
             }
-        
-            // Kiểm tra $role
-            if (isset($_GET['role'])) {
-                if ($_GET['role'] !== 'AD' && $_GET['role'] !== 'UR') {
-                    $errors[] = "Role phải là 'AD' hoặc 'UR'.";
-                }
-            }
             if ($limit ==null) {
                 $errors[] = "Tham số 'limit' là bắt buộc.";
             }else{
@@ -124,7 +117,7 @@
         // Kiểm tra xem Access Token có được gửi lên hay không
         if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
             http_response_code(401);
-            echo json_encode(array("error" => "yêu cầu có access_token để xác thực"));
+            echo json_encode(array("errors" => "yêu cầu có access_token để xác thực"));
             return false;
         }
            // Lấy giá trị của Access Token từ header
@@ -132,16 +125,20 @@
            // Kiểm tra xem Access Token có đúng định dạng hay không
            if (!preg_match('/Bearer\s(\S+)/', $accessToken, $matches)) {
                http_response_code(401);
-               echo json_encode(array("error" => "access_token chưa đúng định dạng"));
+               echo json_encode(array("errors" => "access_token chưa đúng định dạng"));
                return false;
            }
            // Lấy giá trị thực tế của Access Token
             $accessToken = $matches[1];
             $decodeAuthorization = verifyToken($accessToken,"dayLaKEyAcCes5ToKEn123456123123");
+            if(!$decodeAuthorization){
+                http_response_code(401);
+                return false;
+            }
             $_REQUEST['decode_authorization'] = $decodeAuthorization;
             return true;
         }catch(Exception $e){
-            echo json_encode(array("error"=>"token hết hạn hoặc không hợp lệ: " . $e->getMessage()));
+            echo json_encode(array("errors"=>"token hết hạn hoặc không hợp lệ: " . $e->getMessage()));
             return false;
         }
 
@@ -153,7 +150,7 @@
             // Kiểm tra xem Refresh Token có được gửi lên hay không
             if (!isset($_POST['refresh_token'])) {
                 http_response_code(401);
-                echo json_encode(array("error" => "yêu cầu có refresh_token để xác thực"));
+                echo json_encode(array("errors" => "yêu cầu có refresh_token để xác thực"));
                 return false;
             }
                // Lấy giá trị của Refresh Token từ body
@@ -161,7 +158,7 @@
                // Kiểm tra xem Access Token có đúng định dạng hay không
                if (!preg_match('/Bearer\s(\S+)/', $refreshToken, $matches)) {
                    http_response_code(401);
-                   echo json_encode(array("error" => "refresh_token chưa đúng định dạng"));
+                   echo json_encode(array("errors" => "refresh_token chưa đúng định dạng"));
                    return false;
                }
                // Lấy giá trị thực tế của refresh Token
@@ -178,7 +175,7 @@
                 $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
                 if(!$isExist){
                     http_response_code(401);
-                    echo json_encode(array("error" => "refresh_token này không tồn tại trong db (bạn chưa đăng nhập)"));
+                    echo json_encode(array("errors" => "refresh_token này không tồn tại trong db (bạn chưa đăng nhập)"));
                     $conn = null;
                     return false;
                 }
@@ -187,13 +184,17 @@
 
 
                 $decode_refreshToken = verifyToken($refresh_token,"CAiNaYLARefResHTOkenKeY12344321242123");
+                if(!$decode_refreshToken){
+                    http_response_code(401);
+                    return false;
+                }
                 $_REQUEST['decode_refreshToken'] = $decode_refreshToken;
       
 
                 $conn = null;
                 return true;
             }catch(Exception $e){
-                echo json_encode(array("error"=>"token hết hạn hoặc không hợp lệ: " . $e->getMessage()));
+                echo json_encode(array("errors"=>"token hết hạn hoặc không hợp lệ: " . $e->getMessage()));
                 $conn = null;
                 return false;
             }
@@ -207,12 +208,12 @@
         }
             else{
                 http_response_code(401);
-                echo json_encode(array("error" => "yêu cầu quyền admin"));
+                echo json_encode(array("errors" => "yêu cầu quyền admin"));
                 return false;
             }
         }else{
             http_response_code(401);
-            echo json_encode(array("error" => "yêu cầu đăng nhập"));
+            echo json_encode(array("errors" => "yêu cầu đăng nhập"));
 
         }
     }

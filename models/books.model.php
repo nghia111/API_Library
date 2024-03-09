@@ -57,19 +57,6 @@
             }
             $stmt->execute();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
             $num = $stmt->rowCount();
             $query2 =  "SELECT COUNT(*) as total_rows FROM BOOKS";
             $stmt2 = $this->conn->prepare($query2);
@@ -98,7 +85,6 @@
                 return (array("message"=>"Successfully",'data'=>$results_array, 'total_page' => $total_pages));
             }
             else{
-                http_response_code(404);
                return (array('message:'=>"không tìm thấy sách"));    
             }
 

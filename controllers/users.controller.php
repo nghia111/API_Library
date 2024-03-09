@@ -14,7 +14,6 @@
         if(isset($_GET['id'])){ $user->id= $_GET['id'];} 
         if(isset($_GET['name'])){ $user->name= $_GET['name'];} 
         if(isset($_GET['email'])){ $user->email= $_GET['email'];} 
-        if(isset($_GET['role'])){ $user->role= $_GET['role'];} 
         
         $result = $user->getUsers();
         $num = $result->rowCount();
