@@ -22,7 +22,17 @@
             echo json_encode($result);
    
     }
-    
+    function getBookByIdController(){
+        $db = new Database();
+
+        $connect = $db->connect();
+        $book = new Book( $connect);
+        if(isset($_GET['id'])){ $book->id= $_GET['id'];} 
+        $result = $book->getBookById();
+        echo json_encode($result);
+
+}
+
     function getAllCategoriesController(){
         $db = new Database();
     

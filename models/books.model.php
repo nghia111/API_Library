@@ -183,6 +183,32 @@
     
         }
 
+        public function getBookById(){
+            $query = "SELECT books.*, categories.code as category_code, categories.value as category_value FROM books JOIN categories ON books.category_code = categories.code where id=:id ";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $this->id);
+            $stmt->execute();
+            $num = $stmt->rowCount();
+            if($num>0){
+                $book= $stmt->fetch(PDO::FETCH_ASSOC);
+                extract($book);
+                $item = array(
+                    'id'=> $id,
+                    'title'=>$title,
+                    'available'=>$available,
+                    'image'=>$image,
+                    'description'=>$description,
+                    'category_code'=>$category_code,
+                    'author'=>$author,
+                    'category_code' => $category_code,
+                    'category_value' =>$category_value,
+                );
+                return (array('message:'=>"successfully", "data"=>$item));     
+
+            }else{
+                return (array('message:'=>"không tìm thấy sách"));    
+            } 
+        } 
     }
 
 

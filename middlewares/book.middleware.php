@@ -70,6 +70,23 @@
         }
         return true;
 }
+    function getBookById() {
+        $errors = [];
+       
+        // Kiểm tra $id
+        if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
+            $errors[] = "ID phải là một số.";
+        }
+    
+    
+        if (!empty($errors)) {
+                http_response_code(422);
+                echo json_encode(array("error:"=> $errors)) ;
+            
+            return false;
+        }
+        return true;
+}
 
     function createBookValidator() {
         $errors = [];
