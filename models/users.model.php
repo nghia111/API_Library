@@ -24,7 +24,8 @@ class User{
     public function getUsers(){
         $this->role = "UR";
         $query_params= [];
-        $query = "SELECT id,name,email,role FROM users where 1=1 AND role = :role ";
+        $query = "SELECT id,name,email,role FROM users where 1=1 AND role = ? ";
+        array_push($query_params,$this->role);
         if($this->id){
             $query = $query."AND id = ?";
             array_push($query_params,$this->id);
@@ -37,14 +38,7 @@ class User{
             $query = $query."AND email = ?";
             array_push($query_params,$this->email);
         }
-
-        $offset = ($_GET['page'] - 1) *$_GET['limit'];
-
-        $query= $query."LIMIT ".$_GET['limit']."
-                        OFFSET ".$offset." ";
-
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':role',$this->role);
         for ($i = 0; $i < count($query_params); $i++) {
             $stmt->bindParam($i + 1, $query_params[$i]);
         }
