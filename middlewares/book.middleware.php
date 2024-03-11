@@ -64,7 +64,7 @@
         }
         if (!empty($errors)) {
                 http_response_code(422);
-                echo json_encode(array("error:"=> $errors)) ;
+                echo json_encode(array("errors:"=> $errors)) ;
             
             return false;
         }
@@ -81,7 +81,7 @@
     
         if (!empty($errors)) {
                 http_response_code(422);
-                echo json_encode(array("error:"=> $errors)) ;
+                echo json_encode(array("errors:"=> $errors)) ;
             
             return false;
         }
@@ -98,7 +98,7 @@
         !isset($_POST['image']) 
         ) {
             http_response_code(422);
-            echo json_encode(array("error:"=> "vui lòng điền đầy đủ thông tin: title, available, description, category_code, author, image")) ;
+            echo json_encode(array("errors:"=> "vui lòng điền đầy đủ thông tin: title, available, description, category_code, author, image")) ;
             return false;
         }
 
@@ -194,7 +194,7 @@
         if (!empty($errors)) {
             // lỗi validate 
             http_response_code(422);
-            echo json_encode(array("error:"=> $errors)) ;
+            echo json_encode(array("errors:"=> $errors)) ;
             return false;
         }
         return true;
@@ -208,7 +208,7 @@
     function deleteBookValidator(){
         if(!isset($_GET['id'])|| empty($_GET['id'])   ){
             http_response_code(422);
-            echo json_encode(array("error:"=> "yêu cầu truyền id lên req query ")) ;
+            echo json_encode(array("errors:"=> "yêu cầu truyền id lên req query ")) ;
             return false;
         }
         return true;
@@ -220,7 +220,7 @@
         $id = $_GET['id'] ?? '';
         if(empty($id) || !isset($_GET['id']) ){
             http_response_code(422);
-            echo json_encode(array("error:"=> "yêu cần truyền book id lên query ")) ;
+            echo json_encode(array("errors:"=> "yêu cần truyền book id lên query ")) ;
             return false;
 
         }
@@ -338,14 +338,14 @@
             }
             if (!empty($errors)) {
                 http_response_code(422);
-                echo json_encode(array("error:"=> $errors)) ;
+                echo json_encode(array("errors:"=> $errors)) ;
             
             return false;
             }
         return true;
         }else{
             http_response_code(422);
-            echo json_encode(array("error:"=> "bạn cần phải truyền data update lên body ")) ;
+            echo json_encode(array("errors:"=> "bạn cần phải truyền data update lên body ")) ;
             return false;
 
         }

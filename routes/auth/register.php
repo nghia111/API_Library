@@ -9,10 +9,10 @@ function route_register() {
     // Kiểm tra phương thức request là POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // thực hiện validate() 
-        // if(registerValidator()){
+        if(registerValidator()){
             // gọi controller
             registerController();
-        // }
+        }
     
         
 } else {
