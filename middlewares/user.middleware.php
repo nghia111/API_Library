@@ -10,20 +10,20 @@
             
          // Kiểm tra $id
             if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
-                $errors[] = "ID phải là một số.";
+                array_push($errors,   "ID phải là một số.");
             }
         
             // Kiểm tra $name
             if (isset($_GET['name'])) {
                 if (!is_string($_GET['name']) || empty($_GET['name'])) {
-                    $errors[] = "Name phải là một chuỗi và không được để trống.";
+                    array_push($errors,   "Name phải là một chuỗi và không được để trống.");
                 }
             }
             
             // Kiểm tra $email
             if (isset($_GET['email'])) {
                 if (!filter_var($_GET['email'], FILTER_VALIDATE_EMAIL)) {
-                    $errors[] = "Email không hợp lệ.";
+                    array_push($errors,   "Email không hợp lệ.");
                 }
             }
   
@@ -42,10 +42,10 @@
             $errors = [];
             if(isset($_POST['email']) && isset($_POST['password'])){
                 if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
-                    $errors[] = "email không hợp lệ";
+                    array_push($errors,   "email không hợp lệ");
                 }
                 else if(strlen($_POST['password']) < 6){
-                    $errors[] = "password phải từ 6 ký tự trở lên";
+                    array_push($errors,   "password phải từ 6 ký tự trở lên");
                 }
                 else {
                     $query = "SELECT * FROM USERS WHERE email = :email";
@@ -67,17 +67,17 @@
                         $_REQUEST['user'] = $user;
 
                         }else{
-                            $errors[] = "bạn đã login rồi";
+                            array_push($errors,   "bạn đã login rồi");
                         }
 
 
                     }else{
-                        $errors[] = "email hoặc password sai"; 
+                        array_push($errors,   "email hoặc password sai"); 
                     }
                 }
             }
             else{
-               $errors[] = "yêu cầu có email và password "; 
+               array_push($errors,   "yêu cầu có email và password "); 
             }
             if (!empty($errors)) {
                 http_response_code(422);
@@ -213,19 +213,19 @@
         // Kiểm tra định dạng email
         $email = $_POST['email'];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Email không hợp lệ.";
+            array_push($errors,   "Email không hợp lệ.");
         }
 
         // Kiểm tra độ dài mật khẩu
         $password = $_POST['password'];
         if (strlen($password) < 6) {
-            $errors[] = "Mật khẩu phải chứa ít nhất 6 kí tự.";
+            array_push($errors,   "Mật khẩu phải chứa ít nhất 6 kí tự.");
         }
 
         // Kiểm tra khớp mật khẩu và xác nhận mật khẩu
         $confirmPassword = $_POST['confirm_password'];
         if ($password !== $confirmPassword) {
-            $errors[] = "Mật khẩu không khớp.";
+            array_push($errors,   "Mật khẩu không khớp.");
         }
 
         if (!empty($errors)) {
@@ -261,10 +261,10 @@
         $errors=[];
 
         if (!isset($_POST['name']) || empty($_POST['name'])) {
-            $errors[] = "yêu cầu truyền name lên req body ";
+            array_push($errors,   "yêu cầu truyền name lên req body ");
         }
         if(!isset($_GET['id'])|| empty($_GET['id'])   ){
-            $errors[] = "yêu cầu truyền id lên req query ";
+            array_push($errors,   "yêu cầu truyền id lên req query ");
         }
         if (!empty($errors)) {
             http_response_code(422);

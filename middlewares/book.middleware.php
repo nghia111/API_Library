@@ -16,50 +16,58 @@
         }
         // Kiểm tra $id
         if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
-            $errors[] = "ID phải là một số.";
+            array_push($errors,  "ID phải là một số.");
         }
     
         // Kiểm tra $title
         if (isset($_GET['title'])) {
             if (!is_string($_GET['title']) || empty($_GET['title'])) {
-                $errors[] = "title phải là một chuỗi và không được để trống.";
+                array_push($errors,  "title phải là một chuỗi và không được để trống.");
+
             }
         }
         
         // Kiểm tra $available
         if (isset($_GET['available']) && !is_numeric($_GET['available']) ) {
-            $errors[] = "available phải là một số";
+            array_push($errors,   "available phải là một số");
+
             if($_GET['available']<0){
-                $errors[]= "available phải >= 0";
+                array_push($errors,   "available phải >= 0");
+
             }
         }
     
         // Kiểm tra $description
         if (isset($_GET['description'])) {
             if (!is_string($_GET['description']) || empty($_GET['description'])) {
-                $errors[] = "description phải là một chuỗi và không được để trống.";
+                array_push($errors,  "description phải là một chuỗi và không được để trống.");
             }
         }
         // Kiểm tra $category
         if (isset($_GET['category_code'])) {
              if (!is_string($_GET['category_code']) || empty($_GET['category_code'])) {
-                  $errors[] = "category_code phải là một chuỗi và không được để trống.";
+                array_push($errors,  "category_code phải là một chuỗi và không được để trống.");
+
               }
            }
         
         
         if ($limit ==null) {
-            $errors[] = "Tham số 'limit' là bắt buộc.";
+            array_push($errors,  "Tham số 'limit' là bắt buộc.");
+
         }else{
             if(intval($limit)<=0 || intval($limit)>99){
-                $errors[] = "0 < 'limit' < 100.";
+                array_push($errors,  "0 < 'limit' < 100.");
+
             }
         }
         if ($page == null) {
-            $errors[] = "Tham số 'page' là bắt buộc.";
+            array_push($errors,  "Tham số 'page' là bắt buộc.");
+
         }else{
             if(intval($page)<=0){
-                $errors[] = "'page' > 0 .";
+                array_push($errors,  "'page' > 0 .");
+
             }
         }
         if (!empty($errors)) {
@@ -75,7 +83,7 @@
        
         // Kiểm tra $id
         if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
-            $errors[] = "ID phải là một số.";
+            array_push($errors,   "ID phải là một số.");
         }
     
     
@@ -104,17 +112,17 @@
 
         // Kiểm tra title
         if (!is_string($_POST['title'])) {
-            $errors[] = "title phải là string.";
+            array_push($errors,   "title phải là string.");
         }
 
         // Kiểm tra description
         if (!is_string($_POST['description'])) {
-            $errors[] = "description phải là string.";
+            array_push($errors,   "description phải là string.");
         }
 
         // Kiểm tra category_code
         if (!is_string($_POST['category_code'])) {
-            $errors[] = "category_code phải là string.";
+            array_push($errors,   "category_code phải là string.");
         }else{
             $valid_categories = array(
                 "ACC8",
@@ -169,26 +177,26 @@
                 "YTO11"
             );
             if(!in_array($_POST['category_code'],$valid_categories)){
-                $errors[]= "category_code không hợp lệ";
+                array_push($errors,   "category_code không hợp lệ");
             }
         }
         // Kiểm tra author
         if (!is_string($_POST['author'])) {
-            $errors[] = "author phải là string.";
+            array_push($errors,   "author phải là string.");
         }
         // Kiểm tra image
         if (!empty($_POST['image'])) {
             if (!is_string($_POST['image'])) {
-                $errors[] = "image phải là string.";
+                array_push($errors,   "image phải là string.");
             }
             }
         
         // Kiểm tra available
         if (!is_numeric($_POST['available'])) {
-            $errors[] = "available phải là number";
+            array_push($errors,   "available phải là number");
         }else{
             if($_POST['available'] <0){
-                $errors[]= "available phải >= 0";
+                array_push($errors,   "available phải >= 0");
             }
         }
         if (!empty($errors)) {
@@ -238,16 +246,16 @@
             // Kiểm tra dữ liệu cho biến title
             if (!empty($title)) {
                 if(!is_string($title)){
-                    $errors[] = "title phải là string";
+                    array_push($errors,   "title phải là string");
                 }
             }
 
             // Kiểm tra dữ liệu cho biến available
             if (!empty($available)) {
                 if(!is_numeric($available)){
-                    $errors[]="available phải là number";
+                    array_push($errors,  "available phải là number");
                     if($available<0){
-                        $errors[]="available phải >= 0";
+                        array_push($errors,  "available phải >= 0");
                     }
                 }
             }
@@ -255,7 +263,7 @@
             // Kiểm tra dữ liệu cho biến image
             if (!empty($image)) {
                 if(!is_string($image)){
-                    $errors[] = "image phải là string";
+                    array_push($errors,   "image phải là string");
                 }
             }
             
@@ -263,14 +271,14 @@
             // Kiểm tra dữ liệu cho biến description
             if (!empty($description)) {
                 if(!is_string($description)){
-                    $errors[] = "description phải là string";
+                    array_push($errors,   "description phải là string");
                 }
             }
 
             // Kiểm tra dữ liệu cho biến category_code
             if (!empty($category_code)) {
                 if(!is_string($category_code)){
-                    $errors[] = "category_code phải là string";
+                    array_push($errors,   "category_code phải là string");
                 }else{
                     $valid_categories = array(
                         "ACC8",
@@ -325,7 +333,7 @@
                         "YTO11"
                     );
                     if(!in_array($category_code,$valid_categories)){
-                        $errors[]= "category_code không hợp lệ";
+                        array_push($errors,   "category_code không hợp lệ");
                     }
                 }
             }
@@ -333,7 +341,7 @@
             // Kiểm tra dữ liệu cho biến author
             if (!empty($author)) {
                 if(!is_string($author)){
-                    $errors[] = "author phải là string";
+                    array_push($errors,   "author phải là string");
                 }
             }
             if (!empty($errors)) {
