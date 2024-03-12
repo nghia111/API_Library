@@ -48,26 +48,23 @@ class User{
     }
     
     public function login(){
-        $payload = array('id'=> $_REQUEST['user']['id'],
-                         'name'=>$_REQUEST['user']['name'],
-                         'role'=>$_REQUEST['user']['role']);
-        $accessTokenKey = "dayLaKEyAcCes5ToKEn123456123123";
-        $expirationAccessTokenTime =strtotime("+5 day");
-        $accessToken = signToken($payload,$accessTokenKey,$expirationAccessTokenTime);
+        $payload = array('id'=>$this->id,
+                         'name'=>$this->name,
+                         'role'=>$this->role);
+        $accessToken = signToken($payload,accessTokenKey,expirationAccessTokenTime);
         
 
-        $refreshTokenKey ="CAiNaYLARefResHTOkenKeY12344321242123";
-        $expirationRefreshTokenTime =strtotime("+100 day");
-        $refreshToken = signToken($payload,$refreshTokenKey,$expirationRefreshTokenTime);
+        $refreshToken = signToken($payload,refreshTokenKey,expirationRefreshTokenTime);
 
+        // thêm refreshtoken vào db
         $query = "INSERT INTO refresh_tokens (user_id, value) VALUES (:user_id, :value)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':user_id',$_REQUEST['user']['id'] );
+        $stmt->bindParam(':user_id',$this->id );
         $stmt->bindParam(':value', $refreshToken);
         $stmt->execute();
 
         $this->conn = null;
-        return [$accessToken,$refreshToken];
+        return [$accessToken,$refreshToken,$this->role];
     }
 
         
@@ -85,9 +82,6 @@ class User{
     }
     
     public function register(){
-
-
-        $this->role = "UR";
         $query = "INSERT INTO users (name,email,password,role) values (:name,:email,:password,:role)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':name', $this->name);
@@ -140,17 +134,13 @@ class User{
     }
     
     public function refreshToken(){
-        $payload = array('id'=> $_REQUEST['decode_refreshToken']->id,
-        'name'=>$_REQUEST['decode_refreshToken']->name,
-        'role'=>$_REQUEST['decode_refreshToken']->role);
-        $accessTokenKey = "dayLaKEyAcCes5ToKEn123456123123";
-        $expirationAccessTokenTime =strtotime("+5 day");
-        $accessToken = signToken($payload,$accessTokenKey,$expirationAccessTokenTime);
+        $payload = array('id'=> $this->id,
+        'name'=>$this->name,
+        'role'=>$this->role);
+        $accessToken = signToken($payload,accessTokenKey,expirationAccessTokenTime);
 
-
-        $refreshTokenKey ="CAiNaYLARefResHTOkenKeY12344321242123";
         $expirationRefreshTokenTime = $_REQUEST['decode_refreshToken']->exp;
-        $refreshToken = signToken($payload,$refreshTokenKey,$expirationRefreshTokenTime);
+        $refreshToken = signToken($payload,refreshTokenKey,$expirationRefreshTokenTime);
 
         $query = "UPDATE refresh_tokens set value=:value, updatedAt=CURRENT_TIMESTAMP() where user_id=:user_id";
         $stmt = $this->conn->prepare($query);
@@ -159,7 +149,7 @@ class User{
         $stmt->execute();
 
         $this->conn = null;
-        return [$accessToken,$refreshToken];
+        return [$accessToken,$refreshToken,$this->role];
     }
 }
 ?>

@@ -43,11 +43,16 @@
         $connect = $db->connect();
         $user = new User( $connect);
         
+        $user->id =  $_REQUEST['user']['id'];
+        $user->name = $_REQUEST['user']['name'];
+        $user->role = $_REQUEST['user']['role'];
+
         $result = $user->login();
     
 
         echo json_encode(array("message"=>"Successfully",'access_token'=>$result[0],
-                                                         'refresh_token'=>$result[1]));
+                                                         'refresh_token'=>$result[1],
+                                                         'role'=>$result[2]));
       
     }
 
@@ -74,6 +79,7 @@
             $password = hash_password($_POST['password']);
             $user->setPassword($password);
         } 
+        $user->role = 'UR';
         $result = $user->register();
     
 
@@ -109,9 +115,13 @@
 
         $connect = $db->connect();
         $user = new User( $connect);
+        $user->id=$_REQUEST['decode_refreshToken']->id;
+        $user->name=$_REQUEST['decode_refreshToken']->name;
+        $user->role=$_REQUEST['decode_refreshToken']->role;
         $result = $user->refreshToken();
         echo json_encode(array("message"=>"Successfully",'access_token'=>$result[0],
-                                                         'refresh_token'=>$result[1]));
+                                                         'refresh_token'=>$result[1],
+                                                         'role'=>$result[2]));
     }
 
 ?>

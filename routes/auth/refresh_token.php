@@ -6,7 +6,7 @@
     require "../../middlewares/user.middleware.php";
     require "../../controllers/users.controller.php";
 
-    function route_update_users() {
+    function route_refresh_token() {
         // Kiểm tra phương thức request là GET
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // lấy data từ req.query
@@ -22,5 +22,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        route_update_users()
+        route_refresh_token()
 ?>

@@ -1,7 +1,7 @@
 <?php
     header('Access-Control-Allow-Origin:*');
     header('Content-Type: application/json');
-
+    require '../../constants.php';
     require "../../utils/crypto.php";
     require "../../utils/jwt.php";
 
@@ -107,7 +107,7 @@
            }
            // Lấy giá trị thực tế của Access Token
             $accessToken = $matches[1];
-            $decodeAuthorization = verifyToken($accessToken,"dayLaKEyAcCes5ToKEn123456123123");
+            $decodeAuthorization = verifyToken($accessToken,accessTokenKey);
             if(!$decodeAuthorization){
                 http_response_code(401);
                 return false;
