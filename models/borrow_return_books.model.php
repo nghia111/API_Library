@@ -53,7 +53,7 @@
 
         //tạo sách mượn , borrrowed_day ngay thời gian tạo, returned_day là null
 
-    public function createBorrowReturnBook(){
+    public function createBorrowBook(){
         $query ="INSERT INTO borrow_return_books( user_id, book_id) VALUES(:user_id, :book_id)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':user_id', $this->user_id);
@@ -63,7 +63,7 @@
         return array("message"=>"tạo yêu cầu mượn công thành công. Hãy đợi admin duyệt");
     }
 
-    public function accept(){
+    public function acceptBorrow(){
         $query = "UPDATE borrow_return_books
         JOIN books ON borrow_return_books.book_id = books.id
         SET books.available = books.available - 1,

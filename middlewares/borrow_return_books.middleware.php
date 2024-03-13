@@ -2,7 +2,7 @@
  header('Access-Control-Allow-Origin:*');
  header('Content-Type: application/json');
   
-function createBorrowReturnBookValidator(){
+function createBorrowBookValidator(){
     if (!isset($_POST['book_id']) || !is_numeric($_POST['book_id'])) {
         http_response_code(422);
         echo json_encode(array("errors:"=> "book_id phải là 1 số và bắt buộc truyền lên")) ;
@@ -27,7 +27,7 @@ function createBorrowReturnBookValidator(){
 
 }
 
-function acceptValidator(){
+function acceptRejectBorrowValidator(){
     if (!isset($_POST['borrow_id']) || !is_numeric($_POST['borrow_id'])) {
         http_response_code(422);
         echo json_encode(array("errors:"=> "borrow_id phải là 1 số và bắt buộc truyền lên")) ;
@@ -43,7 +43,7 @@ function acceptValidator(){
     $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
     if(!$isExist){
         http_response_code(404);
-        echo json_encode(array("errors" => "đã được admin khác verify rồi)"));
+        echo json_encode(array("errors" => "đã được admin khác verify rồi"));
         $conn = null;
         return false;
     }

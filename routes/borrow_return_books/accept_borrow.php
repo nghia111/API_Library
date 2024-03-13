@@ -1,19 +1,22 @@
 <?php
+    //api của admin
 
     require "../../middlewares/borrow_return_books.middleware.php";
     require "../../controllers/borrow_return_books.controller.php";
     require "../../middlewares/user.middleware.php";
 
-    function route_create_borrow_return_book() {
-        // Kiểm tra phương thức request là POST
+    function accept_borrow() {
+        // Kiểm tra phương thức request là GET
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // lấy data từ req.query
      
         // thực hiện validate() 
         if(accessTokenValidator()){  
-            if(createBorrowReturnBookValidator()){
-                // gọi controller
-                createBorrowReturnBookController();
+            if(isAdmin()){
+                if(acceptRejectBorrowValidator()){
+                    // gọi controller
+                    acceptBorrowController();
+                }
             }
         }
     } else {
@@ -22,5 +25,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        route_create_borrow_return_book()
+        accept_borrow()
 ?>

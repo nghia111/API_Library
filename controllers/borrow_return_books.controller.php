@@ -15,22 +15,22 @@
         echo json_encode($result);
     }
 
-    function createBorrowReturnBookController(){
+    function createBorrowBookController(){
         $db = new Database();
         $connect = $db->connect();
         $borrowReturnBook = new BorrowReturnBook( $connect);
         $borrowReturnBook->user_id =   $_REQUEST['decode_authorization']->id;
         $borrowReturnBook->book_id = $_POST['book_id'];
-        $result =  $borrowReturnBook->createBorrowReturnBook();
+        $result =  $borrowReturnBook->createBorrowBook();
         echo json_encode($result);
     }
 
-    function acceptController(){
+    function acceptBorrowController(){
         $db = new Database();
         $connect = $db->connect();
         $borrowReturnBook = new BorrowReturnBook( $connect);
         $borrowReturnBook->id = $_POST['borrow_id'];
-        $result =  $borrowReturnBook->accept();
+        $result =  $borrowReturnBook->acceptBorrow();
         echo json_encode($result);
     }
     function deleteBorrowReturnBooksController(){
