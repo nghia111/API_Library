@@ -15,7 +15,7 @@
             if(isAdmin()){
                 if(acceptRejectBorrowValidator()){
                     // gọi controller
-                    acceptBorrowController();
+                    acceptRejectBorrowController();
                 }
             }
         }

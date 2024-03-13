@@ -28,6 +28,22 @@ function createBorrowBookValidator(){
 }
 
 function acceptRejectBorrowValidator(){
+
+
+    if (!isset($_GET['type']) ) {
+        http_response_code(422);
+        echo json_encode(array("errors:"=> "phải truyền lên req query type")) ;
+        return false;
+    }else{
+       if($_GET['type'] != accepted_borrow  && $_GET['type'] != rejected_borrow  ){
+            http_response_code(422);
+            echo json_encode(array("errors:"=> "type phải là 1(accept) hoặc 2(reject)")) ;
+            return false;
+
+       }
+    }
+
+
     if (!isset($_POST['borrow_id']) || !is_numeric($_POST['borrow_id'])) {
         http_response_code(422);
         echo json_encode(array("errors:"=> "borrow_id phải là 1 số và bắt buộc truyền lên")) ;
@@ -36,9 +52,11 @@ function acceptRejectBorrowValidator(){
     $db = new Database();
     $conn = $db -> connect();
 
-    $query = "SELECT * FROM borrow_return_books WHERE id = :id AND status=0";
+    $query = "SELECT * FROM borrow_return_books WHERE id = :id AND status=:status";
     $stmt = $conn->prepare($query);
+    $request_borrow = request_borrow;
     $stmt->bindParam(':id',$_POST['borrow_id']);
+    $stmt->bindParam(':status',$request_borrow);
     $stmt->execute();
     $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
     if(!$isExist){

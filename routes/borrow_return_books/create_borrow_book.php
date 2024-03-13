@@ -4,7 +4,7 @@
     require "../../controllers/borrow_return_books.controller.php";
     require "../../middlewares/user.middleware.php";
 
-    function route_create_borrow_return_book() {
+    function route_create_borrow_book() {
         // Kiểm tra phương thức request là POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // lấy data từ req.query
@@ -22,5 +22,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        route_create_borrow_return_book()
+        route_create_borrow_book()
 ?>

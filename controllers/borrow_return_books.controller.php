@@ -25,12 +25,13 @@
         echo json_encode($result);
     }
 
-    function acceptBorrowController(){
+    function acceptRejectBorrowController(){
         $db = new Database();
         $connect = $db->connect();
         $borrowReturnBook = new BorrowReturnBook( $connect);
         $borrowReturnBook->id = $_POST['borrow_id'];
-        $result =  $borrowReturnBook->acceptBorrow();
+        $borrowReturnBook->status = intval($_GET['type']);
+        $result =  $borrowReturnBook->acceptRejectBorrow();
         echo json_encode($result);
     }
     function deleteBorrowReturnBooksController(){

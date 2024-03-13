@@ -63,20 +63,29 @@
         return array("message"=>"tạo yêu cầu mượn công thành công. Hãy đợi admin duyệt");
     }
 
-    public function acceptBorrow(){
+    public function acceptRejectBorrow(){
+
         $query = "UPDATE borrow_return_books
         JOIN books ON borrow_return_books.book_id = books.id
-        SET books.available = books.available - 1,
-            borrow_return_books.status =:status     WHERE borrow_return_books.id=:id " ;
+        SET borrow_return_books.status =:status " ;
+        if($this->status == accepted_borrow){
+            $query= $query. " ,books.available = books.available- 1 ";
+        }
+        $query = $query. " WHERE borrow_return_books.id=:id ";
         $stmt = $this->conn->prepare($query);
-        $accepted = accepted;
-        $stmt->bindParam(':status', $accepted);
+        $stmt->bindParam(':status', $this->status);
         $stmt->bindParam(':id', $this->id);
         $stmt->execute();
         // lấy số row được cập nhật
         $affectedRows = $stmt->rowCount();
         if($affectedRows >0){
-            return array("errors"=>"thành công. Accepted");
+            if($this->status == accepted_borrow){                
+                return array("message"=>"thành công. Accepted");
+            }
+            else{
+                return array("message"=>"Thành công. Rejected");
+            }
+               
         }else{
             http_response_code(404);
             return array("errors"=>"Thất bại. ");
