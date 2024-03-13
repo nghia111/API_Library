@@ -1,5 +1,5 @@
 <?php
-   class BorrowReturnBooks{
+   class BorrowReturnBook{
    private $conn;
    public  $id;
    public $user_id;
@@ -13,71 +13,93 @@
    }
    
    //lấy sách mượn theo user id hoac book id 
-   public function getBorrowReturnBooks(){
-   $query = 
-   " SELECT borrow_return_books.*, users.name as user_name,books.title as book_title
-   FROM borrow_return_books
-   INNER JOIN users ON borrow_return_books.user_id = users.id
-   INNER JOIN books ON borrow_return_books.book_id = books.id";
-  
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        $result= $stmt;
-        $this->conn = null;
-        $num = $result->rowCount();
-        if($num>0){
-            $results_array= [];
-            while($row= $result->fetch(PDO::FETCH_ASSOC)){
-                extract($row);
-                $item = array(
-                    'id'=> $id,
-                    'user_id'=>$user_id,
-                    'user_name'=>$user_name,
-                    'book_id'=>$book_id,
-                    'book_title'=>$book_title,
-                    'status'=>$status,
-                    'borrowed_day'=>$borrowed_day,
-                    'returned_day'=>$returned_day
-                );
-                array_push($results_array,$item);
+    public function getBorrowReturnBooks(){
+        $query = 
+        " SELECT borrow_return_books.*, users.name as user_name,books.title as book_title
+        FROM borrow_return_books
+        INNER JOIN users ON borrow_return_books.user_id = users.id
+        INNER JOIN books ON borrow_return_books.book_id = books.id";
+    
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $result= $stmt;
+            $this->conn = null;
+            $num = $result->rowCount();
+            if($num>0){
+                $results_array= [];
+                while($row= $result->fetch(PDO::FETCH_ASSOC)){
+                    extract($row);
+                    $item = array(
+                        'id'=> $id,
+                        'user_id'=>$user_id,
+                        'user_name'=>$user_name,
+                        'book_id'=>$book_id,
+                        'book_title'=>$book_title,
+                        'status'=>$status,
+                        'borrowed_day'=>$borrowed_day,
+                        'returned_day'=>$returned_day
+                    );
+                    array_push($results_array,$item);
+                }
+                return array("message"=>"Successfully",'data'=>$results_array);
             }
-            return array("message"=>"Successfully",'data'=>$results_array);
-        }
-        else{
-            http_response_code(404);
-            return (array('message:'=>"không tìm thấy "));    
-        }
-   
+            else{
+                http_response_code(404);
+                return (array('message:'=>"không tìm thấy "));    
+            }
+    
     }
 
 
         //tạo sách mượn , borrrowed_day ngay thời gian tạo, returned_day là null
-public function createBorrowReturnBooks(){
-   $query ="INSERT INTO borrow_return_books( user_id, book_id, borrowed_day,returned_day) VALUES(:user_id, :book_id, NOW(), :returned_day)";
-   $stmt = $this->conn->prepare($query);
-   $stmt->bindParam(':user_id', $this->user_id);
-   $stmt->bindParam(':book_id', $this->book_id);
-   $stmt->bindParam(':returned_day', null,PDO::PARAM_NULL);
-   $stmt->execute();
-   $this->conn = null;
-   return array("message"=>"tạo sách mượn công thành công.");
-}
-//xóa sách mượn qua mã mượn
-public function deleteBorrowReturnBooks(){
-   $query="DELETE FROM borrow_return_books where id=:id ";
-   $stmt = $this->conn->prepare($query);
-   $stmt->bindParam(':id', $this->id);
-   $stmt->execute();
-   $affectedRows = $stmt->rowCount();
-   $this->conn = null;
-   if($affectedRows >0){
-       return array("message"=>"xóa sách thành công.");
-   }else{
-       http_response_code(404);
-       return array("errors"=>"xóa sách thất bại, book not found");
 
-   }
-}
+    public function createBorrowReturnBook(){
+        $query ="INSERT INTO borrow_return_books( user_id, book_id) VALUES(:user_id, :book_id)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $this->user_id);
+        $stmt->bindParam(':book_id', $this->book_id);
+        $stmt->execute();
+        $this->conn = null;
+        return array("message"=>"tạo yêu cầu mượn công thành công. Hãy đợi admin duyệt");
+    }
+
+    public function accept(){
+        $query = "UPDATE borrow_return_books
+        JOIN books ON borrow_return_books.book_id = books.id
+        SET books.available = books.available - 1,
+            borrow_return_books.status =:status     WHERE borrow_return_books.id=:id " ;
+        $stmt = $this->conn->prepare($query);
+        $accepted = accepted;
+        $stmt->bindParam(':status', $accepted);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+        // lấy số row được cập nhật
+        $affectedRows = $stmt->rowCount();
+        if($affectedRows >0){
+            return array("errors"=>"thành công. Accepted");
+        }else{
+            http_response_code(404);
+            return array("errors"=>"Thất bại. ");
+        }
+    }
+
+
+    //xóa sách mượn qua mã mượn
+    public function deleteBorrowReturnBooks(){
+    $query="DELETE FROM borrow_return_books where id=:id ";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':id', $this->id);
+    $stmt->execute();
+    $affectedRows = $stmt->rowCount();
+    $this->conn = null;
+    if($affectedRows >0){
+        return array("message"=>"xóa sách thành công.");
+    }else{
+        http_response_code(404);
+        return array("errors"=>"xóa sách thất bại, book not found");
+
+    }
+    }
 //cập nhật thời gian trả sách qua mã mượn
 public function updateBorrowReturnBooks(){
     $query = "UPDATE borrow_return_books SET returned_day = CURRENT_TIMESTAMP() where id =:id";

@@ -66,8 +66,7 @@ class User{
         $this->conn = null;
         return [$accessToken,$refreshToken,$this->role];
     }
-
-        
+  
     public function logout(){
 
         $refresh_token = preg_split("/\s+/", $_POST['refresh_token'])[1];
@@ -133,6 +132,22 @@ class User{
         }
     }
     
+    public function getMyProfile(){
+        $query =  " SELECT id,name,email,role FROM users where id=:id ";  
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id',$this->id );
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->conn = null;
+        $data = array(
+            'id'=> $data['id'],
+            'name'=>$data['name'],
+            'email'=> $data['email'],
+            'role'=>$data['role'],
+        );
+        return array( "message"=> "Successfully","data"=> $data);
+    }
+
     public function refreshToken(){
         $payload = array('id'=> $this->id,
         'name'=>$this->name,

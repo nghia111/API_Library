@@ -1,18 +1,23 @@
 <?php
     //api của admin
 
+    require "../../middlewares/borrow_return_books.middleware.php";
+    require "../../controllers/borrow_return_books.controller.php";
     require "../../middlewares/user.middleware.php";
-    require "../../controllers/users.controller.php";
 
-    function route_get_my_profile() {
+    function route_get_borrow_return_books() {
         // Kiểm tra phương thức request là GET
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // lấy data từ req.query
      
         // thực hiện validate() 
         if(accessTokenValidator()){  
-            // gọi controller
-            getMyProfileController();
+            if(isAdmin()){
+                if(acceptValidator()){
+                    // gọi controller
+                    acceptController();
+                }
+            }
         }
     } else {
             // Trả về lỗi không hỗ trợ phương thức
@@ -20,5 +25,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        route_get_my_profile()
+        route_get_borrow_return_books()
 ?>

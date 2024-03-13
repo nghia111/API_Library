@@ -9,32 +9,34 @@
         $db = new Database();
 
         $connect = $db->connect();
-        $borrowReturnBooks = new BorrowReturnBooks( $connect);
+        $borrowReturnBooks = new BorrowReturnBook( $connect);
        
         $result =  $borrowReturnBooks->getBorrowReturnBooks();
         echo json_encode($result);
     }
-    function createBorrowReturnBooksController(){
+
+    function createBorrowReturnBookController(){
         $db = new Database();
         $connect = $db->connect();
-        $borrowReturnBooks = new BorrowReturnBooks( $connect);
-        if(isset($_POST['user_id'])) { $borrowReturnBooks -> user_id= $_POST['user_id'];}
-        if(isset($_POST['book_id'])) { $borrowReturnBooks -> book_id= $_POST['user_id'];}
-        $result =  $borrowReturnBooks->createBorrowReturnBooks();
+        $borrowReturnBook = new BorrowReturnBook( $connect);
+        $borrowReturnBook->user_id =   $_REQUEST['decode_authorization']->id;
+        $borrowReturnBook->book_id = $_POST['book_id'];
+        $result =  $borrowReturnBook->createBorrowReturnBook();
         echo json_encode($result);
     }
-    function updateBorrowReturnBooksController(){
+
+    function acceptController(){
         $db = new Database();
         $connect = $db->connect();
-        $borrowReturnBooks = new BorrowReturnBooks( $connect);
-        if(isset($_GET['id'])) { $borrowReturnBooks -> user_id= $_POST['user_id'];}
-        $result =  $borrowReturnBooks->updateBorrowReturnBooks();
+        $borrowReturnBook = new BorrowReturnBook( $connect);
+        $borrowReturnBook->id = $_POST['borrow_id'];
+        $result =  $borrowReturnBook->accept();
         echo json_encode($result);
     }
     function deleteBorrowReturnBooksController(){
         $db = new Database();
         $connect = $db->connect();
-        $borrowReturnBooks = new BorrowReturnBooks( $connect);
+        $borrowReturnBooks = new BorrowReturnBook( $connect);
         if(isset($_GET['id'])) { $borrowReturnBooks -> user_id= $_POST['user_id'];}
         $result =  $borrowReturnBooks->deleteBorrowReturnBooks();
         echo json_encode($result);

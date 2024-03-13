@@ -110,6 +110,20 @@
         echo json_encode($result);
     }
 
+    function getMyProfileController(){
+        $db = new Database();
+
+        $connect = $db->connect();
+        $user = new User( $connect);
+        $user->id = $_REQUEST['decode_authorization']->id;
+        
+        $result = $user->getMyProfile();
+        echo json_encode($result);
+        
+    }
+
+    
+
     function refreshTokenController(){
         $db = new Database();
 
