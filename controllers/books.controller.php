@@ -4,6 +4,9 @@
     header('Content-Type: application/json');
     require "../../db.php";
     require "../../models/books.model.php";
+    require '../../constants.php';
+    require "../../utils/crypto.php";
+    require "../../utils/jwt.php";
 
 
     function getBooksController(){

@@ -1,9 +1,6 @@
 <?php
     header('Access-Control-Allow-Origin:*');
     header('Content-Type: application/json');
-    require '../../constants.php';
-    require "../../utils/crypto.php";
-    require "../../utils/jwt.php";
 
     function getUsersValidator() {
             $errors = [];
