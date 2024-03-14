@@ -7,9 +7,4 @@
     define('accepted_borrow',1 );
     define('rejected_borrow',2 );
     define('request_return',3);
-    define('accepted_return',4 );
-    define('rejected_return',5);
-    
- 
-
 ?>

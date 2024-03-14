@@ -45,7 +45,7 @@
             }
             else{
                 http_response_code(404);
-                return (array('message:'=>"không tìm thấy "));    
+                return (array('message:'=>"không tìm thấy phiếu mượn nào "));    
             }
     
     }
@@ -64,7 +64,10 @@
     }
 
     public function createReturnBook(){
-        $query ="UPDATE borrow_return_books  SET status = :status   WHERE id=:id AND user_id=:user_id";
+        $query = "UPDATE borrow_return_books
+        JOIN books ON borrow_return_books.book_id = books.id
+        SET borrow_return_books.status =:status, books.available = books.available +1, borrow_return_books.returned_day= CURRENT_TIMESTAMP()
+        WHERE borrow_return_books.id=:id AND borrow_return_books.user_id=:user_id" ;
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':user_id',$this->user_id);
@@ -72,7 +75,7 @@
         $stmt->bindParam(':status',$request_return );
         $stmt->execute();
         $this->conn = null;
-        return array("message"=>"tạo yêu cầu trả sách thành công. Hãy đợi admin duyệt");
+        return array("message"=>"Trả sách thành công");
 
     }
 
@@ -105,40 +108,78 @@
         }
     }
 
+    public function getMyBorrowReturnBooks(){
+        $query = 
+        " SELECT borrow_return_books.*, users.name as user_name,books.title as book_title
+        FROM borrow_return_books
+        INNER JOIN users ON borrow_return_books.user_id = users.id
+        INNER JOIN books ON borrow_return_books.book_id = books.id WHERE borrow_return_books.user_id=:user_id ";
 
-    //xóa sách mượn qua mã mượn
-    public function deleteBorrowReturnBooks(){
-    $query="DELETE FROM borrow_return_books where id=:id ";
-    $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(':id', $this->id);
-    $stmt->execute();
-    $affectedRows = $stmt->rowCount();
-    $this->conn = null;
-    if($affectedRows >0){
-        return array("message"=>"xóa sách thành công.");
-    }else{
-        http_response_code(404);
-        return array("errors"=>"xóa sách thất bại, book not found");
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':user_id',$this->user_id);
+
+            $stmt->execute();
+            $result= $stmt;
+            $this->conn = null;
+            $num = $result->rowCount();
+            if($num>0){
+                $results_array= [];
+                while($row= $result->fetch(PDO::FETCH_ASSOC)){
+                    extract($row);
+                    $item = array(
+                        'id'=> $id,
+                        'user_id'=>$user_id,
+                        'user_name'=>$user_name,
+                        'book_id'=>$book_id,
+                        'book_title'=>$book_title,
+                        'status'=>$status,
+                        'borrowed_day'=>$borrowed_day,
+                        'returned_day'=>$returned_day
+                    );
+                    array_push($results_array,$item);
+                }
+                return array("message"=>"Successfully",'data'=>$results_array);
+            }
+            else{
+                http_response_code(404);
+                return (array('message:'=>"không tìm thấy phiếu mượn nào "));    
+            }
 
     }
-    }
-//cập nhật thời gian trả sách qua mã mượn
-public function updateBorrowReturnBooks(){
-    $query = "UPDATE borrow_return_books SET returned_day = CURRENT_TIMESTAMP() where id =:id";
-    $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(':id', $this->id);
-    $stmt->execute();
-    $this->conn = null;
-    $affectedRows = $stmt->rowCount();
-    $this->conn = null;
-    if($affectedRows >0){
-        return array("message"=>"cập nhật sách mượn thành công");
-    }else{
-        http_response_code(404);
-        return array("errors"=>"cập nhật sách thất bại, book not found");
 
-    }
-}
+//     //xóa sách mượn qua mã mượn
+//     public function deleteBorrowReturnBooks(){
+//     $query="DELETE FROM borrow_return_books where id=:id ";
+//     $stmt = $this->conn->prepare($query);
+//     $stmt->bindParam(':id', $this->id);
+//     $stmt->execute();
+//     $affectedRows = $stmt->rowCount();
+//     $this->conn = null;
+//     if($affectedRows >0){
+//         return array("message"=>"xóa sách thành công.");
+//     }else{
+//         http_response_code(404);
+//         return array("errors"=>"xóa sách thất bại, book not found");
+
+//     }
+//     }
+// //cập nhật thời gian trả sách qua mã mượn
+// public function updateBorrowReturnBooks(){
+//     $query = "UPDATE borrow_return_books SET returned_day = CURRENT_TIMESTAMP() where id =:id";
+//     $stmt = $this->conn->prepare($query);
+//     $stmt->bindParam(':id', $this->id);
+//     $stmt->execute();
+//     $this->conn = null;
+//     $affectedRows = $stmt->rowCount();
+//     $this->conn = null;
+//     if($affectedRows >0){
+//         return array("message"=>"cập nhật sách mượn thành công");
+//     }else{
+//         http_response_code(404);
+//         return array("errors"=>"cập nhật sách thất bại, book not found");
+
+//     }
+// }
 
 }
 ?>

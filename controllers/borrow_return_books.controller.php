@@ -44,5 +44,13 @@
         $result =  $borrowReturnBook->createReturnBook();
         echo json_encode($result);
     }
+    function getMyBorrowReturnBooksController(){
+        $db = new Database();
+        $connect = $db->connect();
+        $borrowReturnBook = new BorrowReturnBook( $connect);
+        $borrowReturnBook->user_id = $_REQUEST['decode_authorization']->id;
+        $result =  $borrowReturnBook->getMyBorrowReturnBooks();
+        echo json_encode($result);
 
+    }
 ?>
