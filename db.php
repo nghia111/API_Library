@@ -1,9 +1,9 @@
 <?php
 class Database{
-    private $host = "localhost";
-    private $username= "root";
-    private $password ="";
-    private $dbName = "library";
+    private $host = host;
+    private $username= username;
+    private $password =password;
+    private $dbName = dbName;
     private $conn;
     public function __construct() {
     }

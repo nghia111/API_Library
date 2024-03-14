@@ -7,4 +7,9 @@
     define('accepted_borrow',1 );
     define('rejected_borrow',2 );
     define('request_return',3);
+
+    define('host','localhost' );
+    define('username','root');
+    define('password','' );
+    define('dbName','library');
 ?>
