@@ -110,7 +110,7 @@
             $stmt->execute();
     
             $this->conn = null;
-            return array("message"=>"tạo sách thành công thành công.");
+            return array("message"=>"tạo sách thành công .");
         }
 
         public function deleteBook(){

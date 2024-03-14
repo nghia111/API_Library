@@ -63,6 +63,19 @@
         return array("message"=>"tạo yêu cầu mượn công thành công. Hãy đợi admin duyệt");
     }
 
+    public function createReturnBook(){
+        $query ="UPDATE borrow_return_books  SET status = :status   WHERE id=:id AND user_id=:user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':user_id',$this->user_id);
+        $request_return =request_return;
+        $stmt->bindParam(':status',$request_return );
+        $stmt->execute();
+        $this->conn = null;
+        return array("message"=>"tạo yêu cầu trả sách thành công. Hãy đợi admin duyệt");
+
+    }
+
     public function acceptRejectBorrow(){
 
         $query = "UPDATE borrow_return_books

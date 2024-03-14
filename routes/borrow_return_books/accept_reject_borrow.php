@@ -5,7 +5,7 @@
     require "../../controllers/borrow_return_books.controller.php";
     require "../../middlewares/user.middleware.php";
 
-    function accept_borrow() {
+    function accept_reject_borrow() {
         // Kiểm tra phương thức request là GET
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // lấy data từ req.query
@@ -25,5 +25,5 @@
             echo json_encode(array("message" => "Method Not Allowed"));
         }
         }
-        accept_borrow()
+        accept_reject_borrow()
 ?>

@@ -13,13 +13,9 @@ class User{
         $this->conn = $db;
     }
 
-
-
     public function setPassword($password) {
         $this->password = $password;
     }
-
-
 
     public function getUsers(){
         $this->role = "UR";

@@ -15,15 +15,46 @@ function createBorrowBookValidator(){
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':book_id',$_POST['book_id']);
     $stmt->execute();
+
     $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
+    $conn = null;
+
     if(!$isExist){
         http_response_code(404);
         echo json_encode(array("errors" => "sách không tồn tại hoặc đã sách hết trong kho)"));
-        $conn = null;
         return false;
     }
 
     return true;
+
+}
+
+function createReturnBookValidator(){
+    if (!isset($_POST['borrow_id']) || !is_numeric($_POST['borrow_id'])) {
+        http_response_code(422);
+        echo json_encode(array("errors:"=> "borrow_id phải là 1 số và bắt buộc truyền lên")) ;
+        return false;
+    }
+    $db = new Database();
+    $conn = $db -> connect();
+
+    $query = "SELECT * FROM borrow_return_books WHERE id = :id AND status =:status";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id',$_POST['borrow_id']);
+    $accepted_borrow =accepted_borrow;
+    $stmt->bindParam(':status',$accepted_borrow);
+    $stmt->execute();
+    $conn = null;
+
+    $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
+    if(!$isExist){
+        http_response_code(404);
+        echo json_encode(array("errors" => "không tìm thấy phiếu mượn"));
+        return false;
+    }
+
+    return true;
+
 
 }
 
@@ -59,10 +90,11 @@ function acceptRejectBorrowValidator(){
     $stmt->bindParam(':status',$request_borrow);
     $stmt->execute();
     $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
+    $conn = null;
+
     if(!$isExist){
         http_response_code(404);
         echo json_encode(array("errors" => "đã được admin khác verify rồi"));
-        $conn = null;
         return false;
     }
     return true;

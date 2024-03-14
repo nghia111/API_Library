@@ -34,12 +34,15 @@
         $result =  $borrowReturnBook->acceptRejectBorrow();
         echo json_encode($result);
     }
-    function deleteBorrowReturnBooksController(){
+
+    function createReturnBookController(){
         $db = new Database();
         $connect = $db->connect();
-        $borrowReturnBooks = new BorrowReturnBook( $connect);
-        if(isset($_GET['id'])) { $borrowReturnBooks -> user_id= $_POST['user_id'];}
-        $result =  $borrowReturnBooks->deleteBorrowReturnBooks();
+        $borrowReturnBook = new BorrowReturnBook( $connect);
+        $borrowReturnBook->id = $_POST['borrow_id'];
+        $borrowReturnBook->user_id = $_REQUEST['decode_authorization']->id;
+        $result =  $borrowReturnBook->createReturnBook();
         echo json_encode($result);
     }
+
 ?>
