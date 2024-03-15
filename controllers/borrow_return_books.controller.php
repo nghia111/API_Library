@@ -13,7 +13,7 @@
 
         $connect = $db->connect();
         $borrowReturnBooks = new BorrowReturnBook( $connect);
-       
+        if(isset($_GET['user_id'])){ $borrowReturnBooks->user_id= $_GET['user_id'];} 
         $result =  $borrowReturnBooks->getBorrowReturnBooks();
         echo json_encode($result);
     }

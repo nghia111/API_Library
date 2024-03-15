@@ -18,10 +18,19 @@
         " SELECT borrow_return_books.*, users.name as user_name,books.title as book_title
         FROM borrow_return_books
         INNER JOIN users ON borrow_return_books.user_id = users.id
-        INNER JOIN books ON borrow_return_books.book_id = books.id ORDER BY borrow_return_books.status ASC";
+        INNER JOIN books ON borrow_return_books.book_id = books.id ";
+
+        if($this->user_id){
+            $query .= " WHERE user_id=:user_id ";
+        }
+
+        $query .= " ORDER BY borrow_return_books.status ASC ";
 
             $stmt = $this->conn->prepare($query);
-            $stmt->execute();
+            if($this->user_id){
+                $stmt->bindParam(':user_id',$this->user_id);
+            }
+                $stmt->execute();
             $result= $stmt;
             $this->conn = null;
             $num = $result->rowCount();
