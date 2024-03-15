@@ -13,10 +13,12 @@
         // thực hiện validate() 
         if(accessTokenValidator()){  
             if(isAdmin()){
-                // gọi controller
-                getBorrowReturnBooksController();
+                if(getBorrowReturnBooksValidator()){        
+                    // gọi controller
+                    getBorrowReturnBooksController();
                 }
             }
+        }
     } else {
             // Trả về lỗi không hỗ trợ phương thức
             http_response_code(405);

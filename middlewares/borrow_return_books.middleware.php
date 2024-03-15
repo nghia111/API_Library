@@ -26,14 +26,25 @@
         $stmt->execute();
 
         $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
-        $conn = null;
 
         if(!$isExist){
             http_response_code(404);
-            echo json_encode(array("errors" => "sách không tồn tại hoặc đã sách hết trong kho)"));
+            echo json_encode(array("errors" => "sách không tồn tại hoặc đã sách hết trong kho"));
             return false;
         }
 
+        $query = "SELECT * FROM borrow_return_books WHERE user_id = :user_id AND book_id = :book_id AND (status = 0 OR status = 1)";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':user_id',$_REQUEST['decode_authorization']->id);
+        $stmt->bindParam(':book_id',$_POST['book_id']);
+        $stmt->execute();
+
+        $BRB = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($BRB){
+            http_response_code(200);
+            echo json_encode(array("message" => $BRB));
+            return false;
+        }
         return true;
 
     }
