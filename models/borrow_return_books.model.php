@@ -18,8 +18,8 @@
         " SELECT borrow_return_books.*, users.name as user_name,books.title as book_title
         FROM borrow_return_books
         INNER JOIN users ON borrow_return_books.user_id = users.id
-        INNER JOIN books ON borrow_return_books.book_id = books.id";
-    
+        INNER JOIN books ON borrow_return_books.book_id = books.id ORDER BY borrow_return_books.status ASC";
+
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $result= $stmt;
