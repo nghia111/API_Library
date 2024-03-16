@@ -60,7 +60,7 @@ class User{
         $stmt->execute();
 
         $this->conn = null;
-        return [$accessToken,$refreshToken,$this->role];
+        return [$accessToken,$refreshToken,$this->role,expirationAccessTokenTime,expirationRefreshTokenTime];
     }
   
     public function logout(){
@@ -160,7 +160,7 @@ class User{
         $stmt->execute();
 
         $this->conn = null;
-        return [$accessToken,$refreshToken,$this->role];
+        return [$accessToken,$refreshToken,$this->role,expirationAccessTokenTime,$expirationRefreshTokenTime];
     }
 }
 ?>

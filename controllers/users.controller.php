@@ -55,7 +55,9 @@
 
         echo json_encode(array("message"=>"Successfully",'access_token'=>$result[0],
                                                          'refresh_token'=>$result[1],
-                                                         'role'=>$result[2]));
+                                                         'role'=>$result[2],
+                                                         'expirationAccessTokenTime'=>$result[3],
+                                                         'expirationRefreshTokenTime'=>$result[4]));
       
     }
 
@@ -138,7 +140,9 @@
         $result = $user->refreshToken();
         echo json_encode(array("message"=>"Successfully",'access_token'=>$result[0],
                                                          'refresh_token'=>$result[1],
-                                                         'role'=>$result[2]));
+                                                         'role'=>$result[2],
+                                                         'expirationAccessTokenTime'=>$result[3],
+                                                         'expirationRefreshTokenTime'=>$result[4]));
     }
 
 ?>
