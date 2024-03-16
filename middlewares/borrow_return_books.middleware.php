@@ -42,7 +42,7 @@
         $BRB = $stmt->fetch(PDO::FETCH_ASSOC);
         if($BRB){
             http_response_code(200);
-            echo json_encode(array("message" => $BRB));
+            echo json_encode(array("message" => "Sách này đang được bạn mượn"));
             return false;
         }
         return true;
