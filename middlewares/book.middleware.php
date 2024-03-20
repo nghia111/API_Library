@@ -18,7 +18,16 @@
         if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
             array_push($errors,  "ID phải là một số.");
         }
-    
+        // Kiểm tra $free
+        if (isset($_GET['free']) ) {
+            $free = ( $_GET['free']);
+            if(!is_numeric($free)){
+                array_push($errors,   "free phải là số");
+            } else if(intval($free)!=1 &&  intval( $free)!=0){
+                array_push($errors,   "free phải là 0 hoặc 1");
+            }
+        }
+
         // Kiểm tra $title
         if (isset($_GET['title'])) {
             if (!is_string($_GET['title']) || empty($_GET['title'])) {
@@ -103,10 +112,12 @@
         !isset($_POST['description']) || empty($_POST['description']) ||
         !isset($_POST['category_code']) || empty($_POST['category_code'])||
         !isset($_POST['author']) || empty($_POST['author'])||
-        !isset($_POST['image']) 
+        !isset($_POST['image']) ||
+        !isset($_POST['free']) 
+
         ) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> "vui lòng điền đầy đủ thông tin: title, available, description, category_code, author, image")) ;
+            echo json_encode(array("errors:"=> "vui lòng điền đầy đủ thông tin: title, available, description, category_code, author, image,free")) ;
             return false;
         }
 
@@ -190,7 +201,14 @@
                 array_push($errors,   "image phải là string.");
             }
             }
-        
+        if (!empty($_POST['free'])) {
+            if(!is_numeric($_POST['free'])){
+                array_push($errors,   "free phải là một số.");
+            }else if (intval($_POST['free'])!=1 &&  intval( $_POST['free'])!=0) {
+                array_push($errors,   "free phải là 0 hoặc 1.");
+            }
+            }
+
         // Kiểm tra available
         if (!is_numeric($_POST['available'])) {
             array_push($errors,   "available phải là number");
@@ -241,7 +259,9 @@
         $description = $_POST['description'] ?? '';
         $category_code = $_POST['category_code'] ?? '';
         $author = $_POST['author'] ?? '';
-        if (!empty($title) || !empty($available) || !empty($image) || !empty($description) || !empty($category_code) || !empty($author)) {
+        $free = $_POST['free'] ?? '';
+
+        if (!empty($title) || !empty($available) || !empty($image) || !empty($description) || !empty($category_code) || !empty($author) || !empty($free)) {
             $errors = [];
             // Kiểm tra dữ liệu cho biến title
             if (!empty($title)) {
@@ -344,6 +364,16 @@
                     array_push($errors,   "author phải là string");
                 }
             }
+            // Kiểm tra dữ liệu cho biến free
+            if (!empty($free)) {
+                if(!is_numeric($free)){
+                    array_push($errors,   "free phải là số");
+                } else if(intval($free)!=1 &&  intval( $free)!=0){
+                    array_push($errors,   "free phải là 0 hoặc 1");
+                }
+            }
+
+
             if (!empty($errors)) {
                 http_response_code(422);
                 echo json_encode(array("errors:"=> $errors)) ;

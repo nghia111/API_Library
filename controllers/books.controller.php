@@ -20,7 +20,8 @@
             if(isset($_GET['description'])){ $book->description= $_GET['description'];} 
             if(isset($_GET['category_code'])){ $book->category_code= $_GET['category_code'];} 
             if(isset($_GET['author'])){ $book->author= $_GET['author'];} 
-            
+            if(isset($_GET['free'])){ $book->free= $_GET['free'];} 
+
             $result = $book->getBooks();
             echo json_encode($result);
    
@@ -76,6 +77,8 @@
         if(isset($_POST['author'])){ $book->author= $_POST['author'];} 
         if(isset($_POST['image'])){ $book->image= $_POST['image'];} 
         if(isset($_POST['category_code'])){ $book->category_code= $_POST['category_code'];}
+        if(isset($_POST['free'])){ $book->free= $_POST['free'];}
+
         $result = $book->createBook();
     
 
@@ -105,6 +108,8 @@
         if(isset($_POST['author'])){ $book->author= $_POST['author'];} 
         if(isset($_POST['image'])){ $book->image= $_POST['image'];} 
         if(isset($_POST['category_code'])){ $book->category_code= $_POST['category_code'];}
+        if(isset($_POST['free'])){ $book->free= $_POST['free'];}
+
         if(isset($_GET['id'])){
              $book->id= $_GET['id'];
         }

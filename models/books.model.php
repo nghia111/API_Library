@@ -9,6 +9,7 @@
         public $description;
         public $category_code;
         public $author;
+        public $free;
 
         //connect db 
         public function   __construct($db){    
@@ -45,6 +46,10 @@
                 $query = $query."AND author = ?";
                 array_push($query_params,$this->author);
             }
+            if($this->free){
+                $query = $query."AND free = ?";
+                array_push($query_params,$this->free);
+            }
     
             $offset = ($_GET['page'] - 1) *$_GET['limit'];
     
@@ -79,6 +84,7 @@
                         'author'=>$author,
                         'category_code' => $category_code,
                         'category_value' =>$category_value,
+                        'free'=>$free,
                     );
                     array_push($results_array,$item);
                 }
@@ -98,7 +104,7 @@
         }
         
         public function createBook(){
-            $query = "INSERT INTO books (title,available,description,image,category_code,author) values (:title,:available,:description,:image,:category_code,:author)";
+            $query = "INSERT INTO books (title,available,description,image,category_code,author,free) values (:title,:available,:description,:image,:category_code,:author,:free)";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':title', $this->title);
             $stmt->bindParam(':available', $this->available);
@@ -106,6 +112,7 @@
             $stmt->bindParam(':image', $this->image );
             $stmt->bindParam(':category_code', $this->category_code );
             $stmt->bindParam(':author', $this->author );
+            $stmt->bindParam(':free', $this->free );
 
             $stmt->execute();
     
@@ -161,6 +168,11 @@
                 $query = $query.",image = ?";
                 array_push($query_params,$this->image);
             }
+            if($this->free){
+                $query = $query.", free = ?";
+                array_push($query_params,$this->free);
+            }
+
             $query = $query. " WHERE id= ?";
             array_push($query_params,$this->id);
 
@@ -202,6 +214,7 @@
                     'author'=>$author,
                     'category_code' => $category_code,
                     'category_value' =>$category_value,
+                    'free'=>$free
                 );
                 return (array('message:'=>"successfully", "data"=>$item));     
 
