@@ -1,4 +1,7 @@
 <?php
+    header('Access-Control-Allow-Methods: POST');
+    header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
+
     //api của admin
 
     require "../../middlewares/borrow_return_books.middleware.php";
