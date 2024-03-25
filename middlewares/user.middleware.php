@@ -66,7 +66,11 @@
                         }else{
                             array_push($errors,   "bạn đã login rồi");
                         }
-
+                        if($user['isBanned'] == 1){
+                            http_response_code(404);
+                            echo json_encode(array("errors:"=> 'Bạn đã bị ban')) ;
+                            return false;
+                        }
 
                     }else{
                         array_push($errors,   "email hoặc password sai"); 
@@ -315,47 +319,18 @@
         return true;
     }
 
-    // function isBanned(){
-    //     if($_REQUEST['decode_authorization']){
-    //         if($_REQUEST['decode_authorization']->isBanned== isBanned){
-    //         return true;
-    //     }
-    //         else{
-    //             http_response_code(401);
-    //             echo json_encode(array("errors" => "yêu cầu quyền admin"));
-    //             return false;
-    //         }
-    //     }else{
-    //         http_response_code(401);
-    //         echo json_encode(array("errors" => "yêu cầu đăng nhập"));
-
-    //     }
-    //     $db = new Database();
-    //     $conn = $db -> connect();
-    //     // tìm người này phải là user và chưa bị ban
-    //     $query = "SELECT * FROM users WHERE id = :id AND role =:role AND isBanned = :banStatus ";
-    //     $role = 'UR';
-    //     $banStatus = notBanned;
-    //     $stmt = $conn->prepare($query);
-    //     $stmt->bindParam(':id',$_POST['user_id']);
-    //     $stmt->bindParam(':role',$role);
-    //     $stmt->bindParam(':id',$banStatus);
-
-    //     $stmt->execute();
-    //     $isExist = $stmt->fetch(PDO::FETCH_ASSOC);
-    //     $conn = null;
-
-    //     if(!$isExist){
-    //         http_response_code(404);
-    //         echo json_encode(array("errors:"=> "không tìm thấy user ")) ;
-    //         return false;
-    //     }
-
-
-
-
-    //     return true;
-    // }
+    function isBanned(){
+            if($_REQUEST['decode_authorization']->banStatus== notBanned){
+            return true;
+        }
+            else{
+                http_response_code(401);
+                echo json_encode(array("errors" => "bạn đã bị ban"));
+                return false;
+            }
+        
+        return true;
+    }
 
 
 ?>

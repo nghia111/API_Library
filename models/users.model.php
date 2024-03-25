@@ -21,7 +21,7 @@ class User{
     public function getUsers(){
         $this->role = "UR";
         $query_params= [];
-        $query = "SELECT id,name,email,role FROM users where 1=1 AND role = ? ";
+        $query = "SELECT id,isBanned,name,email,role FROM users where 1=1 AND role = ? ";
         array_push($query_params,$this->role);
         if($this->id){
             $query = $query."AND id = ?";
@@ -47,7 +47,8 @@ class User{
     public function login(){
         $payload = array('id'=>$this->id,
                          'name'=>$this->name,
-                         'role'=>$this->role);
+                         'role'=>$this->role,
+                         'banStatus'=>$this->isBanned);
         $accessToken = signToken($payload,accessTokenKey,expirationAccessTokenTime);
         
 
@@ -148,7 +149,8 @@ class User{
     public function refreshToken(){
         $payload = array('id'=> $this->id,
         'name'=>$this->name,
-        'role'=>$this->role);
+        'role'=>$this->role,
+        'banStatus'=>$this->isBanned);
         $accessToken = signToken($payload,accessTokenKey,expirationAccessTokenTime);
 
         $expirationRefreshTokenTime = $_REQUEST['decode_refreshToken']->exp;
