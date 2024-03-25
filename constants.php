@@ -8,6 +8,9 @@
     define('rejected_borrow',2 );
     define('request_return',3);
 
+    define('notBanned',0);
+    define('isBanned',1);
+
     define('host','localhost' );
     define('username','root');
     define('password','' );

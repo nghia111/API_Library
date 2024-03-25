@@ -145,4 +145,15 @@
                                                          'expirationRefreshTokenTime'=>$result[4]));
     }
 
+    function banUserController(){
+        $db = new Database();
+
+        $connect = $db->connect();
+        $user = new User( $connect);
+        $id = $_POST['user_id'];
+        $user->id = $id;
+        $result = $user->banUser();
+        echo json_encode($result);
+
+    }
 ?>

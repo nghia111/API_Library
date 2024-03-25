@@ -7,6 +7,7 @@ class User{
     public $email	;
     private $password;	
     public $role ;
+    public $isBanned;
 
     //connect db 
     public function   __construct($db){    
@@ -161,6 +162,27 @@ class User{
 
         $this->conn = null;
         return [$accessToken,$refreshToken,$this->role,expirationAccessTokenTime,$expirationRefreshTokenTime];
+    }
+
+    public function banUser(){
+        $query = "UPDATE users SET isBanned= :banStatus, updatedAt = CURRENT_TIMESTAMP()  where id= :id  ";
+        $stmt = $this->conn->prepare($query);
+        $this->isBanned = isBanned;
+        $stmt->bindParam(':id',  $this->id);
+
+        $stmt->bindParam(':banStatus',  $this->isBanned);
+        $stmt->execute();
+        // lấy số row được cập nhật
+        $affectedRows = $stmt->rowCount();
+        $this->conn = null;
+        if($affectedRows >0){
+            return array("message"=>'Ban thành công ');
+        }else{
+            http_response_code(404);
+            return array("errors"=>"ban thất bại, user not found");
+
+        }
+
     }
 }
 ?>
