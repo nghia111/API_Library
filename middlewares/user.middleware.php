@@ -26,7 +26,7 @@
   
             if (!empty($errors)) {
                     http_response_code(422);
-                    echo json_encode(array("errors:"=> $errors)) ;
+                    echo json_encode(array("errors"=> $errors)) ;
                 
                 return false;
             }
@@ -75,7 +75,7 @@
                         }
                         if($user['isBanned'] == 1){
                             http_response_code(404);
-                            echo json_encode(array("errors:"=> 'Bạn đã bị ban')) ;
+                            echo json_encode(array("errors"=> 'Bạn đã bị ban')) ;
                             return false;
                         }
 
@@ -89,7 +89,7 @@
             }
             if (!empty($errors)) {
                 http_response_code(422);
-                echo json_encode(array("errors:"=> $errors)) ;
+                echo json_encode(array("errors"=> $errors)) ;
                 $conn = null;
             return false;
          }
@@ -214,7 +214,7 @@
         !isset($_POST['confirm_password']) || empty($_POST['confirm_password'])
         ) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> "vui lòng điền đầy đủ thông tin: name, email, password, confirm_password")) ;
+            echo json_encode(array("errors"=> "vui lòng điền đầy đủ thông tin: name, email, password, confirm_password")) ;
             return false;
         }
 
@@ -239,7 +239,7 @@
         if (!empty($errors)) {
             // lỗi validate 
             http_response_code(422);
-            echo json_encode(array("errors:"=> $errors)) ;
+            echo json_encode(array("errors"=> $errors)) ;
             return false;
         }else{
             //kiểm tra người dùng đã tồn tại trong db chưa
@@ -254,7 +254,7 @@
             $conn = null;
             if($isExist){
                 http_response_code(409);
-                echo json_encode(array("errors:"=> "Email đã tồn tại")) ;
+                echo json_encode(array("errors"=> "Email đã tồn tại")) ;
                 return false;
             }
             return true;
@@ -276,7 +276,7 @@
         }
         if (!empty($errors)) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> $errors)) ;
+            echo json_encode(array("errors"=> $errors)) ;
             return false;
         }
         return true;
@@ -287,7 +287,7 @@
     function deleteUserValidator(){
         if(!isset($_GET['id'])|| empty($_GET['id'])   ){
             http_response_code(422);
-            echo json_encode(array("errors:"=> "yêu cầu truyền id lên req query ")) ;
+            echo json_encode(array("errors"=> "yêu cầu truyền id lên req query ")) ;
             return false;
         }
         return true;
@@ -296,7 +296,7 @@
     function banUserValidator(){
         if(!isset($_POST['user_id'])   ){
             http_response_code(422);
-            echo json_encode(array("errors:"=> "yêu cầu truyền id lên req body  ")) ;
+            echo json_encode(array("errors"=> "yêu cầu truyền id lên req body  ")) ;
             return false;
         }
         $db = new Database();
@@ -316,7 +316,7 @@
 
         if(!$isExist){
             http_response_code(404);
-            echo json_encode(array("errors:"=> "không tìm thấy user ")) ;
+            echo json_encode(array("errors"=> "không tìm thấy user ")) ;
             return false;
         }
 

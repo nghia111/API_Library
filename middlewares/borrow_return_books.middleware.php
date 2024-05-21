@@ -5,7 +5,7 @@
     function getBorrowReturnBooksValidator(){
         if (isset($_GET['user_id']) && !is_numeric($_GET['user_id'])) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> "user_id phải là 1 số và bắt buộc truyền lên")) ;
+            echo json_encode(array("errors"=> "user_id phải là 1 số và bắt buộc truyền lên")) ;
             return false;
         }
         return true;
@@ -14,25 +14,25 @@
     function createBorrowBookValidator(){
         if (!isset($_POST['book_id']) || !is_numeric($_POST['book_id'])) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> "book_id phải là 1 số và bắt buộc truyền lên")) ;
+            echo json_encode(array("errors"=> "book_id phải là 1 số và bắt buộc truyền lên")) ;
             return false;
         }
         if (!isset($_POST['expiration_day']) || !is_numeric($_POST['expiration_day'])) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> "expiration_day là ngày hẹn trả và bắt buộc truyền lên")) ;
+            echo json_encode(array("errors"=> "expiration_day là ngày hẹn trả và bắt buộc truyền lên")) ;
             return false;
         }
         $expiration_day = (int) $_POST['expiration_day'];
         $current_date = time();
         if($expiration_day-$current_date <= 0){
             http_response_code(422);
-            echo json_encode(array("errors:"=> "expiration_day không được nhỏ hơn ngày hiện tại")) ;
+            echo json_encode(array("errors"=> "expiration_day không được nhỏ hơn ngày hiện tại")) ;
             return false;
         }
         $one_month = 30 * 24 * 60 * 60; // 1 tháng = 30 ngày
         if($expiration_day - $current_date > $one_month){
             http_response_code(422);
-            echo json_encode(array("errors:"=> "expiration_day không được quá 1 tháng")) ;
+            echo json_encode(array("errors"=> "expiration_day không được quá 1 tháng")) ;
             return false;
         }
         $db = new Database();
@@ -70,7 +70,7 @@
     function createReturnBookValidator(){
         if (!isset($_POST['borrow_id']) || !is_numeric($_POST['borrow_id'])) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> "borrow_id phải là 1 số và bắt buộc truyền lên")) ;
+            echo json_encode(array("errors"=> "borrow_id phải là 1 số và bắt buộc truyền lên")) ;
             return false;
         }
         $db = new Database();
@@ -101,12 +101,12 @@
 
         if (!isset($_GET['type']) ) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> "phải truyền lên req query type")) ;
+            echo json_encode(array("errors"=> "phải truyền lên req query type")) ;
             return false;
         }else{
         if($_GET['type'] != accepted_borrow  && $_GET['type'] != rejected_borrow  ){
                 http_response_code(422);
-                echo json_encode(array("errors:"=> "type phải là 1(accept) hoặc 2(reject)")) ;
+                echo json_encode(array("errors"=> "type phải là 1(accept) hoặc 2(reject)")) ;
                 return false;
 
         }
@@ -115,7 +115,7 @@
 
         if (!isset($_POST['borrow_id']) || !is_numeric($_POST['borrow_id'])) {
             http_response_code(422);
-            echo json_encode(array("errors:"=> "borrow_id phải là 1 số và bắt buộc truyền lên")) ;
+            echo json_encode(array("errors"=> "borrow_id phải là 1 số và bắt buộc truyền lên")) ;
             return false;
         }
         $db = new Database();
