@@ -38,8 +38,9 @@
                 while($row= $result->fetch(PDO::FETCH_ASSOC)){
                     extract($row);
                      // Kiểm tra ngày quá hạn và cập nhật trạng thái nếu cần thiết
-                    $days_borrowed = strtotime($expiration_day) - strtotime($borrowed_day);
-                    if ($days_borrowed < 0) {
+                    $current_date = time();
+                    $days_borrowed = strtotime($expiration_day) - $current_date;
+                    if ($days_borrowed < 0 && $status ==1) {
                         $status = expired; // Cập nhật trạng thái thành 4 (quá hạn)
                         // Thực hiện câu lệnh SQL để cập nhật trạng thái trong bảng borrow_return_books
                         $update_status_query = "UPDATE borrow_return_books SET status = :status WHERE id = :id";
@@ -145,8 +146,9 @@
                 while($row= $result->fetch(PDO::FETCH_ASSOC)){
                     extract($row);
                     // Kiểm tra ngày quá hạn và cập nhật trạng thái nếu cần thiết
-                    $days_borrowed = strtotime($expiration_day) - strtotime($borrowed_day);
-                    if ($days_borrowed < 0) {
+                    $current_date = time();
+                    $days_borrowed = strtotime($expiration_day) - $current_date;
+                    if ($days_borrowed < 0 && $status ==1) {
                         $status = expired; // Cập nhật trạng thái thành 4 (quá hạn)
                         // Thực hiện câu lệnh SQL để cập nhật trạng thái trong bảng borrow_return_books
                         $update_status_query = "UPDATE borrow_return_books SET status = :status WHERE id = :id";
