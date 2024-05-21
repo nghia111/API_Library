@@ -7,6 +7,7 @@
     define('accepted_borrow',1 );
     define('rejected_borrow',2 );
     define('request_return',3);
+    define('expired',4);
 
     define('notBanned',0);
     define('isBanned',1);

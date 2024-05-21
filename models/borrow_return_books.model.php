@@ -6,6 +6,7 @@
    public $book_id;
    public $status;
    public $borrowed_day;
+   public $expiration_day;
    public $returned_day;
    
    public function __construct($db){
@@ -31,12 +32,22 @@
             }
                 $stmt->execute();
             $result= $stmt;
-            $this->conn = null;
             $num = $result->rowCount();
             if($num>0){
                 $results_array= [];
                 while($row= $result->fetch(PDO::FETCH_ASSOC)){
                     extract($row);
+                     // Kiểm tra ngày quá hạn và cập nhật trạng thái nếu cần thiết
+                    $days_borrowed = strtotime($expiration_day) - strtotime($borrowed_day);
+                    if ($days_borrowed < 0) {
+                        $status = expired; // Cập nhật trạng thái thành 4 (quá hạn)
+                        // Thực hiện câu lệnh SQL để cập nhật trạng thái trong bảng borrow_return_books
+                        $update_status_query = "UPDATE borrow_return_books SET status = :status WHERE id = :id";
+                        $update_stmt = $this->conn->prepare($update_status_query);
+                        $update_stmt->bindParam(':status', $status);
+                        $update_stmt->bindParam(':id', $id);
+                        $update_stmt->execute();
+                    }
                     $item = array(
                         'id'=> $id,
                         'user_id'=>$user_id,
@@ -45,10 +56,12 @@
                         'book_title'=>$book_title,
                         'status'=>$status,
                         'borrowed_day'=>$borrowed_day,
+                        'expiration_day'=>$expiration_day,
                         'returned_day'=>$returned_day
                     );
                     array_push($results_array,$item);
                 }
+                $this->conn = null;
                 return array("message"=>"Successfully",'data'=>$results_array);
             }
             else{
@@ -58,10 +71,12 @@
     
     }
     public function createBorrowBook(){
-        $query ="INSERT INTO borrow_return_books( user_id, book_id) VALUES(:user_id, :book_id)";
+        $query ="INSERT INTO borrow_return_books( user_id, book_id, expiration_day) VALUES(:user_id, :book_id, :expiration_day)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':user_id', $this->user_id);
         $stmt->bindParam(':book_id', $this->book_id);
+        $stmt->bindParam(':expiration_day', $this->expiration_day);
+
         $stmt->execute();
         $this->conn = null;
         return array("message"=>"tạo yêu cầu mượn công thành công. Hãy đợi admin duyệt");
@@ -124,12 +139,22 @@
 
             $stmt->execute();
             $result= $stmt;
-            $this->conn = null;
             $num = $result->rowCount();
             if($num>0){
                 $results_array= [];
                 while($row= $result->fetch(PDO::FETCH_ASSOC)){
                     extract($row);
+                    // Kiểm tra ngày quá hạn và cập nhật trạng thái nếu cần thiết
+                    $days_borrowed = strtotime($expiration_day) - strtotime($borrowed_day);
+                    if ($days_borrowed < 0) {
+                        $status = expired; // Cập nhật trạng thái thành 4 (quá hạn)
+                        // Thực hiện câu lệnh SQL để cập nhật trạng thái trong bảng borrow_return_books
+                        $update_status_query = "UPDATE borrow_return_books SET status = :status WHERE id = :id";
+                        $update_stmt = $this->conn->prepare($update_status_query);
+                        $update_stmt->bindParam(':status', $status);
+                        $update_stmt->bindParam(':id', $id);
+                        $update_stmt->execute();
+                    }
                     $item = array(
                         'id'=> $id,
                         'user_id'=>$user_id,
@@ -138,10 +163,12 @@
                         'book_title'=>$book_title,
                         'status'=>$status,
                         'borrowed_day'=>$borrowed_day,
+                        'expiration_day'=>$expiration_day,
                         'returned_day'=>$returned_day
                     );
                     array_push($results_array,$item);
                 }
+                $this->conn = null;
                 return array("message"=>"Successfully",'data'=>$results_array);
             }
             else{

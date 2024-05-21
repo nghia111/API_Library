@@ -24,6 +24,7 @@
         $borrowReturnBook = new BorrowReturnBook( $connect);
         $borrowReturnBook->user_id =   $_REQUEST['decode_authorization']->id;
         $borrowReturnBook->book_id = $_POST['book_id'];
+        $borrowReturnBook->expiration_day =  date('Y-m-d H:i:s', $_POST['expiration_day']);
         $result =  $borrowReturnBook->createBorrowBook();
         echo json_encode($result);
     }
