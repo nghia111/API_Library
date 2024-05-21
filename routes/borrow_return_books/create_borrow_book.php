@@ -13,9 +13,11 @@
      
         // thực hiện validate() 
         if(accessTokenValidator()){  
-            if(createBorrowBookValidator()){
-                // gọi controller
-                createBorrowBookController();
+            if(notBanned()){
+                if(createBorrowBookValidator()){
+                    // gọi controller
+                    createBorrowBookController();
+                }
             }
         }
     } else {

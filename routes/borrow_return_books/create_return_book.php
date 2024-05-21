@@ -12,11 +12,13 @@
             // lấy data từ req.query
      
         // thực hiện validate() 
-        if(accessTokenValidator()){  
-            if(createReturnBookValidator()){
-                // gọi controller
-                createReturnBookController();
-            }
+        if(accessTokenValidator()){ 
+            if(notBanned()){
+                if(createReturnBookValidator()){
+                    // gọi controller
+                    createReturnBookController();
+                }
+            } 
         }
     } else {
             // Trả về lỗi không hỗ trợ phương thức

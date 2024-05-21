@@ -64,7 +64,6 @@
                         $_REQUEST['user'] = $user;
 
                         }else{
-                            // array_push($errors,   "bạn đã login rồi");
                             $query = "DELETE FROM refresh_tokens WHERE  user_id = :user_id AND value = :value";
                             $stmt = $conn->prepare($query);
                             $stmt->bindParam(':user_id',$user['id']);
@@ -73,12 +72,6 @@
     
                             $_REQUEST['user'] = $user;
                         }
-                        if($user['isBanned'] == 1){
-                            http_response_code(404);
-                            echo json_encode(array("errors"=> 'Bạn đã bị ban')) ;
-                            return false;
-                        }
-
                     }else{
                         array_push($errors,   "email hoặc password sai"); 
                     }
@@ -326,18 +319,24 @@
         return true;
     }
 
-    // function isBanned(){
-    //         if($_REQUEST['decode_authorization']->banStatus== notBanned){
-    //         return true;
-    //     }
-    //         else{
-    //             http_response_code(401);
-    //             echo json_encode(array("errors" => "bạn đã bị ban"));
-    //             return false;
-    //         }
-        
-    //     return true;
-    // }
+    function notBanned(){
+            $user_id = $_REQUEST['decode_authorization']->id;
+            $db = new Database();
+            $conn = $db -> connect();
+            
+            $query = "SELECT * FROM users WHERE id = :id";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':id',$user_id);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $conn = null;
+            if($user['isBanned']){
+                http_response_code(409);
+                echo json_encode(array("errors"=> "Không thể dùng tính năng này. Bạn đã bị BAN do vi phạm quy định thư viện!!!")) ;
+                return false;
+            }
+            return true;
+    }
 
 
 ?>
