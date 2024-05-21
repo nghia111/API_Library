@@ -64,7 +64,14 @@
                         $_REQUEST['user'] = $user;
 
                         }else{
-                            array_push($errors,   "bạn đã login rồi");
+                            // array_push($errors,   "bạn đã login rồi");
+                            $query = "DELETE FROM refresh_tokens WHERE  user_id = :user_id AND value = :value";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bindParam(':user_id',$user['id']);
+                            $stmt->bindParam(':value',$refresh_token['value']);
+                            $stmt->execute();
+    
+                            $_REQUEST['user'] = $user;
                         }
                         if($user['isBanned'] == 1){
                             http_response_code(404);
@@ -319,18 +326,18 @@
         return true;
     }
 
-    function isBanned(){
-            if($_REQUEST['decode_authorization']->banStatus== notBanned){
-            return true;
-        }
-            else{
-                http_response_code(401);
-                echo json_encode(array("errors" => "bạn đã bị ban"));
-                return false;
-            }
+    // function isBanned(){
+    //         if($_REQUEST['decode_authorization']->banStatus== notBanned){
+    //         return true;
+    //     }
+    //         else{
+    //             http_response_code(401);
+    //             echo json_encode(array("errors" => "bạn đã bị ban"));
+    //             return false;
+    //         }
         
-        return true;
-    }
+    //     return true;
+    // }
 
 
 ?>
