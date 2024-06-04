@@ -38,12 +38,28 @@
 }
 
     function getAllCategoriesController(){
+
+        $key = null;
+        if(isset($_GET['key'])){
+            $key = $_GET['key'];
+        }
+        
         $db = new Database();
     
         $connect = $db->connect();
 
         $query = "SELECT * FROM categories";
+        
+        if($key) {
+            $query .= " WHERE LEFT(value, 1) = :key ";
+        }
+        
         $stmt = $connect->prepare($query);
+        
+        if($key){
+            $stmt->bindParam(':key',$key);
+        }
+
         $stmt->execute();
         $result= $stmt;
         $connect = null;
